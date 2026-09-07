@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>星星思维识字乐园</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --sky: #4ec3f7;
+      --sun: #ffd166;
+      --mint: #6fdfb5;
+      --coral: #ff8a7a;
+      --ink: #1f2a37;
+      --paper: #f7fbff;
+    }
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    html, body {
+      margin: 0; min-height: 100%;
+      background: linear-gradient(165deg, #dff6ff 0%, #fff8e8 48%, #e8fff4 100%);
+      color: var(--ink);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    }
+    body, button, .no-select { -webkit-user-select: none; user-select: none; }
+    input, textarea { -webkit-user-select: text; user-select: text; }
+    .screen { display: none; min-height: 100dvh; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+    .screen.active { display: block; }
+    .card {
+      background: rgba(255,255,255,0.92);
+      border: 2px solid rgba(31,42,55,0.08);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(78,195,247,0.18);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: none; border-radius: 18px; padding: 12px 18px; font-weight: 700;
+      cursor: pointer; transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+    }
+    .btn:active { transform: scale(0.96); filter: brightness(0.96); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-sky { background: var(--sky); color: #083344; }
+    .btn-sun { background: var(--sun); color: #5b3b00; }
+    .btn-mint { background: var(--mint); color: #064e3b; }
+    .btn-coral { background: var(--coral); color: #5b1212; }
+    .btn-ink { background: #243447; color: #fff; }
+    .btn-ghost { background: #fff; color: var(--ink); border: 2px solid rgba(31,42,55,0.12); box-shadow: none; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+      border-radius: 999px; background: #fff; border: 2px solid rgba(31,42,55,0.08); font-weight: 700;
+    }
+    .modal-mask {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+      display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+    }
+    .modal-mask.open { display: flex; }
+    .modal {
+      width: min(440px, 100%); max-height: 85dvh; overflow: auto;
+      background: #fff; border-radius: 24px; padding: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .char-hero {
+      font-size: clamp(72px, 22vw, 120px); line-height: 1; font-weight: 900; letter-spacing: 0.04em;
+    }
+    .tap-speak { cursor: pointer; }
+    .tap-speak:active { transform: scale(0.98); }
+    .option {
+      min-height: 64px; font-size: 28px; font-weight: 800;
+    }
+    .grid-think { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .think-tile {
+      min-height: 88px; border-radius: 20px; border: 2px solid rgba(31,42,55,0.08);
+      background: #fff; font-size: 36px; font-weight: 800; display:flex; align-items:center; justify-content:center;
+      cursor: pointer; transition: transform .12s ease, background .12s ease;
+    }
+    .think-tile:active { transform: scale(0.96); }
+    .think-tile.selected { outline: 3px solid var(--sky); background: #e8f8ff; }
+    .think-tile.correct { background: #d1fae5; outline: 3px solid #10b981; }
+    .think-tile.wrong { background: #fee2e2; outline: 3px solid #ef4444; }
+    .basket {
+      min-height: 110px; border: 3px dashed rgba(31,42,55,0.2); border-radius: 20px;
+      padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;
+    }
+    .wechat-banner {
+      display: none; background: #fff3cd; color: #664d03; border: 1px solid #ffecb5;
+      border-radius: 14px; padding: 10px 12px; margin-bottom: 12px; font-size: 14px; font-weight: 600;
+    }
+    .wechat-banner.show { display: block; }
+    .progress-bar { height: 10px; background: #e5eef5; border-radius: 999px; overflow: hidden; }
+    .progress-bar > i { display:block; height:100%; background: linear-gradient(90deg, var(--sky), var(--mint)); width: 0%; }
+    .safe-top { padding-top: max(12px, env(safe-area-inset-top)); }
+  </style>
+</head>
+<body class="no-select">
+  <div id="wechatBanner" class="wechat-banner mx-auto max-w-xl mt-3 px-3">检测到微信内置浏览器：语音和录音可能受限，建议用系统浏览器打开本页以获得完整体验。</div>
+
+  <!-- USER SELECT -->
+  <section id="screen-users" class="screen active safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="text-center mb-5">
+        <div class="text-5xl mb-2">🌟</div>
+        <h1 class="text-3xl font-black tap-speak" data-speak="星星思维识字乐园">星星思维识字乐园</h1>
+        <p class="mt-2 text-slate-600 tap-speak" data-speak="练识字，练观察，练分类，练排序，练表达">练识字 · 练观察 · 练分类 · 练排序 · 练表达</p>
+      </div>
+      <div class="card p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 tap-speak" data-speak="选择小朋友">选择小朋友</h2>
+        <div id="userList" class="grid gap-3"></div>
+      </div>
+      <div class="card p-5">
+        <h2 class="font-bold text-lg mb-3 tap-speak" data-speak="添加新朋友">添加新朋友</h2>
+        <div class="flex gap-2">
+          <input id="newUserName" maxlength="8" placeholder="输入名字" class="flex-1 rounded-2xl border-2 border-slate-200 px-4 py-3 outline-none focus:border-sky-400" />
+          <button id="btnAddUser" class="btn btn-mint" type="button">添加</button>
+        </div>
+      </div>
+      <div class="mt-4 flex gap-2 justify-center flex-wrap">
+        <button class="btn btn-ghost" type="button" data-open="modal-bgm">🎵 背景音乐</button>
+        <button class="btn btn-ghost" type="button" id="btnAbout">ℹ️ 说明</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="text-sm text-slate-500">你好</div>
+          <div id="homeUserName" class="text-2xl font-black">小朋友</div>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-ghost" type="button" data-open="modal-bgm">🎵</button>
+          <button id="btnSwitchUser" class="btn btn-ghost" type="button">切换</button>
+        </div>
+      </div>
+      <div class="card p-4 mb-4 flex items-center justify-between">
+        <div>
+          <div class="text-sm text-slate-500 tap-speak" data-speak="思维星星">思维星星</div>
+          <div id="homeStars" class="text-2xl font-black">⭐ 0</div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm text-slate-500 tap-speak" data-speak="识字掌握">识字掌握</div>
+          <div id="homeMastery" class="text-2xl font-black">0</div>
+        </div>
+      </div>
+      <div class="grid gap-3">
+        <button id="btnGoLiteracy" class="btn btn-sky w-full py-5 text-xl" type="button">📘 开始识字</button>
+        <button id="btnGoThink" class="btn btn-mint w-full py-5 text-xl" type="button">🧠 思维乐园</button>
+        <button id="btnGoQuiz" class="btn btn-sun w-full py-5 text-xl" type="button">📝 复习测验</button>
+        <div class="grid grid-cols-2 gap-3">
+          <button class="btn btn-ghost w-full py-4 opacity-70" type="button" id="btnMathSoon">🔢 数学（即将开放）</button>
+          <button class="btn btn-ghost w-full py-4 opacity-70" type="button" id="btnEngSoon">🔤 英语（即将开放）</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LITERACY -->
+  <section id="screen-literacy" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between mb-3">
+        <button class="btn btn-ghost" type="button" data-nav="home">← 主页</button>
+        <span id="litProgressChip" class="chip">1 / 1</span>
+        <button class="btn btn-ghost" type="button" data-open="modal-bgm">🎵</button>
+      </div>
+      <div class="card p-5 text-center mb-4">
+        <div id="litEmoji" class="text-5xl mb-2">⭐</div>
+        <div id="litChar" class="char-hero tap-speak">星</div>
+        <div id="litPinyin" class="text-2xl font-bold text-sky-700 mt-2 tap-speak">xing</div>
+        <div class="mt-3 text-sm text-slate-500">掌握等级 <b id="litLevel">0</b></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <button id="btnReadChar" class="btn btn-sky w-full" type="button">🔊 读这个字</button>
+        <button id="btnRecord" class="btn btn-coral w-full" type="button">🎤 跟读录音</button>
+      </div>
+      <div id="recordHint" class="text-center text-sm text-slate-500 mb-3">点击开始录音，再点结束</div>
+      <div class="card p-4 mb-3">
+        <div class="font-bold mb-2 tap-speak" data-speak="练习选择题">练习选择题</div>
+        <div id="litOptions" class="grid grid-cols-2 gap-3"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btnKnow" class="btn btn-mint w-full py-4" type="button">✅ 我认识</button>
+        <button id="btnUnknown" class="btn btn-sun w-full py-4" type="button">❓ 不认识</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- THINK HUB -->
+  <section id="screen-think-hub" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between mb-4">
+        <button class="btn btn-ghost" type="button" data-nav="home">← 主页</button>
+        <h2 class="text-xl font-black">思维乐园</h2>
+        <span class="w-16"></span>
+      </div>
+      <div class="grid gap-3">
+        <button class="btn btn-sky w-full py-4 text-lg" type="button" data-think="observe">👀 观察力 · 找不同</button>
+        <button class="btn btn-mint w-full py-4 text-lg" type="button" data-think="classify">🧺 分类力 · 分一分</button>
+        <button class="btn btn-sun w-full py-4 text-lg" type="button" data-think="sort">📶 排序力 · 排排队</button>
+        <button class="btn btn-coral w-full py-4 text-lg" type="button" data-think="pattern">🧩 逻辑力 · 找规律</button>
+        <button class="btn btn-ink w-full py-4 text-lg" type="button" data-think="express">🗣️ 表达力 · 看图说</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- THINK PLAY -->
+  <section id="screen-think" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between mb-3">
+        <button class="btn btn-ghost" type="button" data-nav="think-hub">← 返回</button>
+        <span id="thinkTitle" class="font-black">观察</span>
+        <span id="thinkStep" class="chip">1/5</span>
+      </div>
+      <div class="card p-4 mb-3">
+        <div id="thinkPrompt" class="text-lg font-bold mb-3">题目</div>
+        <div id="thinkBody"></div>
+      </div>
+      <div class="flex gap-2">
+        <button id="btnThinkCheck" class="btn btn-sky flex-1" type="button">检查答案</button>
+        <button id="btnThinkNext" class="btn btn-mint flex-1 hidden" type="button">下一题</button>
+        <button id="btnThinkSpeak" class="btn btn-ghost" type="button">🔊</button>
+      </div>
+      <div id="thinkFeedback" class="mt-3 text-center font-bold"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="screen-quiz" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between mb-3">
+        <button class="btn btn-ghost" type="button" id="btnQuizExit">← 退出</button>
+        <span id="quizProgress" class="chip">1/5</span>
+        <span class="w-16"></span>
+      </div>
+      <div class="progress-bar mb-4"><i id="quizBar"></i></div>
+      <div class="card p-5 text-center mb-4">
+        <div class="text-slate-500 mb-2 tap-speak" data-speak="哪个是这个字">哪个是这个字？</div>
+        <div id="quizPrompt" class="text-5xl mb-2">⭐</div>
+        <div id="quizHint" class="text-xl font-bold text-sky-700">xing</div>
+      </div>
+      <div id="quizOptions" class="grid grid-cols-2 gap-3"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ RESULT -->
+  <section id="screen-quiz-result" class="screen safe-top">
+    <div class="max-w-xl mx-auto">
+      <div class="card p-6 text-center">
+        <div class="text-5xl mb-2">🏆</div>
+        <h2 class="text-2xl font-black mb-2">测验报告</h2>
+        <div id="quizReport" class="text-left space-y-2 mb-4"></div>
+        <button class="btn btn-sky w-full mb-2" type="button" data-nav="home">回主页</button>
+        <button class="btn btn-ghost w-full" type="button" data-open="modal-quiz">再测一次</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALS -->
+  <div id="modal-bgm" class="modal-mask" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 class="text-xl font-black mb-3">背景音乐</h3>
+      <div class="grid gap-2" id="bgmChoices"></div>
+      <button class="btn btn-ghost w-full mt-4" type="button" data-close="modal-bgm">关闭</button>
+    </div>
+  </div>
+
+  <div id="modal-quiz" class="modal-mask" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 class="text-xl font-black mb-3">复习测验</h3>
+      <p class="text-slate-600 mb-4">不熟悉的字会更容易出现哦</p>
+      <div class="grid gap-2">
+        <button class="btn btn-sky w-full" type="button" data-quiz-count="5">5 题</button>
+        <button class="btn btn-mint w-full" type="button" data-quiz-count="10">10 题</button>
+        <button class="btn btn-sun w-full" type="button" data-quiz-count="15">15 题</button>
+      </div>
+      <button class="btn btn-ghost w-full mt-4" type="button" data-close="modal-quiz">关闭</button>
+    </div>
+  </div>
+
+  <div id="modal-about" class="modal-mask" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 class="text-xl font-black mb-3">玩法说明</h3>
+      <ul class="text-sm leading-6 text-slate-700 space-y-2 list-disc pl-5">
+        <li>识字：听读、跟读、选择题，认识或不认识都会帮你记忆。</li>
+        <li>思维乐园：观察、分类、排序、找规律、看图表达。</li>
+        <li>复习测验：优先出不熟悉和错过的字。</li>
+        <li>数据只保存在本机浏览器，不会上传。</li>
+      </ul>
+      <button class="btn btn-ghost w-full mt-4" type="button" data-close="modal-about">关闭</button>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "kidsThinkLit.v1";
+  var BGM_STYLES = [
+    { id: "none", label: "无背景音乐", emoji: "🔇" },
+    { id: "box", label: "轻音乐八音盒", emoji: "🎶" },
+    { id: "kids", label: "儿歌轻快", emoji: "🧒" },
+    { id: "game", label: "小游戏 BGM", emoji: "🎮" },
+    { id: "pop", label: "轻松流行", emoji: "🎧" }
+  ];
+
+  var CHAR_BANK = [
+    { char: "郑", pinyin: "zheng", emoji: "🧑" },
+    { char: "星", pinyin: "xing", emoji: "⭐" },
+    { char: "辰", pinyin: "chen", emoji: "🌅" },
+    { char: "礼", pinyin: "li", emoji: "🎁" },
+    { char: "乐", pinyin: "le", emoji: "🎵" },
+    { char: "人", pinyin: "ren", emoji: "🧍" },
+    { char: "大", pinyin: "da", emoji: "🐘" },
+    { char: "小", pinyin: "xiao", emoji: "🐭" },
+    { char: "上", pinyin: "shang", emoji: "⬆️" },
+    { char: "下", pinyin: "xia", emoji: "⬇️" },
+    { char: "天", pinyin: "tian", emoji: "🌤️" },
+    { char: "地", pinyin: "di", emoji: "🌍" },
+    { char: "日", pinyin: "ri", emoji: "☀️" },
+    { char: "月", pinyin: "yue", emoji: "🌙" },
+    { char: "水", pinyin: "shui", emoji: "💧" },
+    { char: "火", pinyin: "huo", emoji: "🔥" },
+    { char: "山", pinyin: "shan", emoji: "⛰️" },
+    { char: "石", pinyin: "shi", emoji: "🪨" },
+    { char: "田", pinyin: "tian", emoji: "🌾" },
+    { char: "土", pinyin: "tu", emoji: "🟤" },
+    { char: "木", pinyin: "mu", emoji: "🌳" },
+    { char: "禾", pinyin: "he", emoji: "🌱" },
+    { char: "米", pinyin: "mi", emoji: "🍚" },
+    { char: "口", pinyin: "kou", emoji: "👄" },
+    { char: "目", pinyin: "mu", emoji: "👀" },
+    { char: "耳", pinyin: "er", emoji: "👂" },
+    { char: "手", pinyin: "shou", emoji: "✋" },
+    { char: "足", pinyin: "zu", emoji: "🦶" },
+    { char: "心", pinyin: "xin", emoji: "💗" },
+    { char: "力", pinyin: "li", emoji: "💪" },
+    { char: "车", pinyin: "che", emoji: "🚗" },
+    { char: "门", pinyin: "men", emoji: "🚪" },
+    { char: "雨", pinyin: "yu", emoji: "🌧️" },
+    { char: "风", pinyin: "feng", emoji: "🍃" },
+    { char: "花", pinyin: "hua", emoji: "🌸" },
+    { char: "鸟", pinyin: "niao", emoji: "🐦" },
+    { char: "鱼", pinyin: "yu", emoji: "🐟" },
+    { char: "虫", pinyin: "chong", emoji: "🐛" },
+    { char: "马", pinyin: "ma", emoji: "🐴" },
+    { char: "牛", pinyin: "niu", emoji: "🐮" },
+    { char: "羊", pinyin: "yang", emoji: "🐑" },
+    { char: "猫", pinyin: "mao", emoji: "🐱" },
+    { char: "狗", pinyin: "gou", emoji: "🐶" },
+    { char: "爸", pinyin: "ba", emoji: "👨" },
+    { char: "妈", pinyin: "ma", emoji: "👩" },
+    { char: "我", pinyin: "wo", emoji: "🧒" },
+    { char: "你", pinyin: "ni", emoji: "🙋" },
+    { char: "好", pinyin: "hao", emoji: "👍" },
+    { char: "学", pinyin: "xue", emoji: "📚" },
+    { char: "习", pinyin: "xi", emoji: "✏️" }
+  ];
+
+  var THINK_LEVELS = {
+    observe: [
+      { prompt: "找出不一样的那个", items: ["🍎", "🍎", "🍐", "🍎"], answer: 2 },
+      { prompt: "哪一个和其他不同？", items: ["🐶", "🐱", "🐶", "🐶"], answer: 1 },
+      { prompt: "找不同", items: ["⭐", "🌙", "⭐", "⭐"], answer: 1 },
+      { prompt: "哪个形状不一样？", items: ["⬛", "⬛", "⬛", "🔺"], answer: 3 },
+      { prompt: "找出单独的颜色", items: ["🔵", "🔴", "🔵", "🔵"], answer: 1 },
+      { prompt: "哪个不是水果？", items: ["🍌", "🍇", "🚗", "🍉"], answer: 2 }
+    ],
+    classify: [
+      {
+        prompt: "把动物和食物分开：点一下物品，再点分类筐",
+        items: ["🐶", "🍎", "🐱", "🍌"],
+        baskets: [
+          { name: "动物", accept: ["🐶", "🐱"] },
+          { name: "食物", accept: ["🍎", "🍌"] }
+        ]
+      },
+      {
+        prompt: "天空的和地上的分一分",
+        items: ["☁️", "🐦", "🌳", "🪨"],
+        baskets: [
+          { name: "天空", accept: ["☁️", "🐦"] },
+          { name: "地上", accept: ["🌳", "🪨"] }
+        ]
+      },
+      {
+        prompt: "圆形和尖尖的分类",
+        items: ["⚽", "🔺", "🟠", "⭐"],
+        baskets: [
+          { name: "圆圆", accept: ["⚽", "🟠"] },
+          { name: "尖尖", accept: ["🔺", "⭐"] }
+        ]
+      }
+    ],
+    sort: [
+      { prompt: "从小到大排队", items: ["🐭", "🐰", "🐘"], order: ["🐭", "🐰", "🐘"] },
+      { prompt: "从少到多排队", items: ["•••", "•", "••"], order: ["•", "••", "•••"] },
+      { prompt: "故事顺序：起床-吃饭-上学", items: ["🏫", "🛏️", "🍚"], order: ["🛏️", "🍚", "🏫"] },
+      { prompt: "从矮到高", items: ["🏢", "🏠", "🛖"], order: ["🛖", "🏠", "🏢"] }
+    ],
+    pattern: [
+      { prompt: "下一个是什么？🔴 🔵 🔴 🔵 ?", options: ["🔴", "🟢", "🟡"], answer: 0 },
+      { prompt: "下一个是什么？⭐ ⭐ 🌙 ⭐ ⭐ 🌙 ?", options: ["⭐", "🌙", "☀️"], answer: 0 },
+      { prompt: "下一个是什么？🔺 ⬛ 🔺 ⬛ ?", options: ["🔺", "🔵", "🟩"], answer: 0 },
+      { prompt: "下一个是什么？🐱 🐶 🐱 🐶 ?", options: ["🐱", "🐭", "🐸"], answer: 0 },
+      { prompt: "下一个是什么？1 2 3 1 2 ?", options: ["3", "4", "1"], answer: 0 }
+    ],
+    express: [
+      { emoji: "🌧️👧☂️", sentence: "下雨了，小朋友打着伞。" },
+      { emoji: "🌅🏞️", sentence: "太阳升起来，山水真美。" },
+      { emoji: "👨‍👩‍👧🏠", sentence: "我和爸爸妈妈在家里很开心。" },
+      { emoji: "📚✏️🧒", sentence: "小朋友认真学习写字。" },
+      { emoji: "🐱🐟", sentence: "小猫想吃小鱼。" }
+    ]
+  };
+
+  var state = {
+    store: null,
+    screen: "users",
+    litIndex: 0,
+    litQueue: [],
+    recording: false,
+    mediaRecorder: null,
+    mediaStream: null,
+    recordedChunks: [],
+    quiz: { total: 0, index: 0, correct: 0, wrongList: [], queue: [] },
+    think: { mode: "observe", index: 0, selected: null, classifyPick: null, sortPicked: [], answered: false }
+  };
+
+  var audio = {
+    ctx: null,
+    master: null,
+    bgmGain: null,
+    nodes: [],
+    timer: null,
+    style: "none",
+    ducked: false
+  };
+
+  function uid() {
+    return "u_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function defaultProfile() {
+    return { charLevels: {}, wrongChars: [], thinkStars: 0, thinkCleared: {} };
+  }
+
+  function loadStore() {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.users && parsed.profiles) return parsed;
+      } catch (e) {}
+    }
+    var a = uid();
+    var b = uid();
+    return {
+      users: [
+        { id: a, name: "星星", createdAt: Date.now() },
+        { id: b, name: "月月", createdAt: Date.now() + 1 }
+      ],
+      currentUserId: null,
+      bgm: "none",
+      profiles: { }
+    };
+  }
+
+  function ensureProfiles(store) {
+    store.users.forEach(function (u) {
+      if (!store.profiles[u.id]) store.profiles[u.id] = defaultProfile();
+    });
+  }
+
+  function saveStore() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.store));
+  }
+
+  function currentUser() {
+    var id = state.store.currentUserId;
+    if (!id) return null;
+    return state.store.users.find(function (u) { return u.id === id; }) || null;
+  }
+
+  function profile() {
+    var u = currentUser();
+    if (!u) return null;
+    if (!state.store.profiles[u.id]) state.store.profiles[u.id] = defaultProfile();
+    return state.store.profiles[u.id];
+  }
+
+  function showScreen(name) {
+    state.screen = name;
+    document.querySelectorAll(".screen").forEach(function (el) {
+      el.classList.toggle("active", el.id === "screen-" + name);
+    });
+  }
+
+  function openModal(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add("open");
+  }
+
+  function closeModal(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove("open");
+  }
+
+  function isWeChat() {
+    return /MicroMessenger/i.test(navigator.userAgent || "");
+  }
+
+  function pickVoice() {
+    var voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+    if (!voices.length) return null;
+    var zh = voices.filter(function (v) {
+      return (v.lang || "").toLowerCase().indexOf("zh") === 0 || (v.lang || "").toLowerCase().indexOf("cmn") === 0;
+    });
+    var pool = zh.length ? zh : voices;
+    var child = pool.find(function (v) {
+      var n = (v.name || "").toLowerCase();
+      return n.indexOf("child") >= 0 || n.indexOf("kid") >= 0 || n.indexOf("xiaoxiao") >= 0 || n.indexOf("xiaoyi") >= 0;
+    });
+    if (child) return child;
+    var female = pool.find(function (v) {
+      var n = (v.name || "").toLowerCase();
+      return n.indexOf("female") >= 0 || n.indexOf("woman") >= 0 || n.indexOf("女") >= 0 || n.indexOf("tingting") >= 0 || n.indexOf("meijia") >= 0;
+    });
+    return female || pool[0];
+  }
+
+  function duckBgm(on) {
+    if (!audio.bgmGain) return;
+    audio.ducked = !!on;
+    var now = audio.ctx ? audio.ctx.currentTime : 0;
+    try {
+      audio.bgmGain.gain.cancelScheduledValues(now);
+      audio.bgmGain.gain.linearRampToValueAtTime(on ? 0.06 : 0.22, now + 0.15);
+    } catch (e) {
+      audio.bgmGain.gain.value = on ? 0.06 : 0.22;
+    }
+  }
+
+  function speak(text, opts) {
+    opts = opts || {};
+    if (!window.speechSynthesis || !text) return;
+    try { speechSynthesis.cancel(); } catch (e) {}
+    duckBgm(true);
+    var u = new SpeechSynthesisUtterance(String(text));
+    u.lang = "zh-CN";
+    u.rate = opts.rate || 0.95;
+    u.pitch = opts.pitch || 1.15;
+    var voice = pickVoice();
+    if (voice) u.voice = voice;
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      duckBgm(false);
+      if (typeof opts.onend === "function") opts.onend();
+    }
+    u.onend = finish;
+    u.onerror = finish;
+    speechSynthesis.speak(u);
+    setTimeout(finish, Math.min(8000, 900 + String(text).length * 220));
+  }
+
+  function praiseAndRead(charItem) {
+    var lines = [
+      "太棒了！Excellent！",
+      "真聪明！Excellent！",
+      "好样的！Excellent！"
+    ];
+    var line = lines[Math.floor(Math.random() * lines.length)];
+    speak(line + charItem.char);
+  }
+
+  function comfortAndRead(charItem) {
+    speak("没关系，我们再记一次。" + charItem.char);
+  }
+
+  function ensureAudio() {
+    if (audio.ctx) return;
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    audio.ctx = new Ctx();
+    audio.master = audio.ctx.createGain();
+    audio.master.gain.value = 1;
+    audio.master.connect(audio.ctx.destination);
+    audio.bgmGain = audio.ctx.createGain();
+    audio.bgmGain.gain.value = 0.22;
+    audio.bgmGain.connect(audio.master);
+  }
+
+  function stopBgmNodes() {
+    if (audio.timer) {
+      clearInterval(audio.timer);
+      audio.timer = null;
+    }
+    audio.nodes.forEach(function (n) {
+      try { n.stop(); } catch (e) {}
+      try { n.disconnect(); } catch (e2) {}
+    });
+    audio.nodes = [];
+  }
+
+  function playTone(freq, dur, type, when, gainVal) {
+    if (!audio.ctx || !audio.bgmGain) return;
+    var o = audio.ctx.createOscillator();
+    var g = audio.ctx.createGain();
+    o.type = type || "sine";
+    o.frequency.value = freq;
+    g.gain.value = 0.0001;
+    o.connect(g);
+    g.connect(audio.bgmGain);
+    var t0 = when || audio.ctx.currentTime;
+    g.gain.exponentialRampToValueAtTime(gainVal || 0.08, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.start(t0);
+    o.stop(t0 + dur + 0.02);
+    audio.nodes.push(o);
+  }
+
+  function startBgm(style) {
+    ensureAudio();
+    stopBgmNodes();
+    audio.style = style;
+    if (!audio.ctx || style === "none") return;
+    if (audio.ctx.state === "suspended") audio.ctx.resume();
+    var patterns = {
+      box: [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25],
+      kids: [392, 440, 494, 523, 587, 523, 494, 440],
+      game: [261.63, 329.63, 392, 523.25, 392, 329.63, 293.66, 261.63],
+      pop: [349.23, 392, 440, 523.25, 440, 392]
+    };
+    var seq = patterns[style] || patterns.box;
+    var i = 0;
+    var wave = style === "game" ? "square" : (style === "pop" ? "triangle" : "sine");
+    audio.timer = setInterval(function () {
+      if (!audio.ctx || audio.style === "none") return;
+      playTone(seq[i % seq.length], style === "kids" ? 0.22 : 0.28, wave, audio.ctx.currentTime, style === "game" ? 0.035 : 0.06);
+      i += 1;
+    }, style === "kids" ? 280 : 360);
+  }
+
+  function charLevel(ch) {
+    var p = profile();
+    return (p && p.charLevels[ch]) || 0;
+  }
+
+  function setCharLevel(ch, level) {
+    var p = profile();
+    if (!p) return;
+    p.charLevels[ch] = Math.max(0, level);
+    saveStore();
+  }
+
+  function markWrong(ch) {
+    var p = profile();
+    if (!p) return;
+    if (p.wrongChars.indexOf(ch) < 0) p.wrongChars.push(ch);
+    saveStore();
+  }
+
+  function weightOf(ch) {
+    var level = charLevel(ch);
+    var p = profile();
+    var wrongBoost = p && p.wrongChars.indexOf(ch) >= 0 ? 2.5 : 1;
+    return (1 / (level + 1)) * wrongBoost;
+  }
+
+  function weightedPick(excludeChar) {
+    var total = 0;
+    var weights = CHAR_BANK.map(function (item) {
+      if (excludeChar && item.char === excludeChar) return 0;
+      var w = weightOf(item.char);
+      total += w;
+      return w;
+    });
+    var r = Math.random() * total;
+    for (var i = 0; i < CHAR_BANK.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return CHAR_BANK[i];
+    }
+    return CHAR_BANK[0];
+  }
+
+  function buildLitQueue() {
+    var list = CHAR_BANK.slice();
+    list.sort(function (a, b) { return weightOf(b.char) - weightOf(a.char); });
+    state.litQueue = list;
+    state.litIndex = 0;
+  }
+
+  function currentLit() {
+    return state.litQueue[state.litIndex] || CHAR_BANK[0];
+  }
+
+  function masteryCount() {
+    var p = profile();
+    if (!p) return 0;
+    return Object.keys(p.charLevels).filter(function (k) { return p.charLevels[k] >= 2; }).length;
+  }
+
+  function renderUsers() {
+    var box = document.getElementById("userList");
+    box.innerHTML = "";
+    state.store.users.forEach(function (u) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-sky w-full py-4 text-xl";
+      btn.textContent = (u.name === "星星" ? "⭐ " : u.name === "月月" ? "🌙 " : "🧒 ") + u.name;
+      btn.addEventListener("click", function () { enterAsUser(u.id); });
+      box.appendChild(btn);
+    });
+  }
+
+  function enterAsUser(userId) {
+    state.store.currentUserId = userId;
+    saveStore();
+    var u = currentUser();
+    renderHome();
+    showScreen("home");
+    speak((u ? u.name : "小朋友") + "你好！欢迎来识字！");
+  }
+
+  function renderHome() {
+    var u = currentUser();
+    var p = profile();
+    document.getElementById("homeUserName").textContent = u ? u.name : "小朋友";
+    document.getElementById("homeStars").textContent = "⭐ " + ((p && p.thinkStars) || 0);
+    document.getElementById("homeMastery").textContent = String(masteryCount()) + " / " + CHAR_BANK.length;
+  }
+
+  function renderBgmChoices() {
+    var box = document.getElementById("bgmChoices");
+    box.innerHTML = "";
+    BGM_STYLES.forEach(function (s) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn w-full " + (state.store.bgm === s.id ? "btn-sky" : "btn-ghost");
+      btn.textContent = s.emoji + " " + s.label + (state.store.bgm === s.id ? "（当前）" : "");
+      btn.addEventListener("click", function () {
+        state.store.bgm = s.id;
+        saveStore();
+        startBgm(s.id);
+        renderBgmChoices();
+        speak(s.id === "none" ? "已关闭背景音乐" : "已切换" + s.label);
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function renderLiteracy() {
+    var item = currentLit();
+    document.getElementById("litEmoji").textContent = item.emoji;
+    document.getElementById("litChar").textContent = item.char;
+    document.getElementById("litChar").setAttribute("data-speak", item.char);
+    document.getElementById("litPinyin").textContent = item.pinyin;
+    document.getElementById("litPinyin").setAttribute("data-speak", item.pinyin);
+    document.getElementById("litLevel").textContent = String(charLevel(item.char));
+    document.getElementById("litProgressChip").textContent = (state.litIndex + 1) + " / " + state.litQueue.length;
+
+    var wrongPool = shuffle(CHAR_BANK.filter(function (c) { return c.char !== item.char; })).slice(0, 3);
+    var options = shuffle([item].concat(wrongPool));
+    var box = document.getElementById("litOptions");
+    box.innerHTML = "";
+    options.forEach(function (opt) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-ghost option w-full";
+      btn.textContent = opt.char;
+      btn.addEventListener("click", function () {
+        if (opt.char === item.char) {
+          setCharLevel(item.char, charLevel(item.char) + 1);
+          praiseAndRead(item);
+          btn.classList.remove("btn-ghost");
+          btn.classList.add("btn-mint");
+        } else {
+          setCharLevel(item.char, charLevel(item.char) - 1);
+          markWrong(item.char);
+          speak("正确答案是" + item.char);
+          btn.classList.remove("btn-ghost");
+          btn.classList.add("btn-coral");
+        }
+        document.getElementById("litLevel").textContent = String(charLevel(item.char));
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  function nextLit() {
+    state.litIndex = (state.litIndex + 1) % state.litQueue.length;
+    renderLiteracy();
+  }
+
+  function startLiteracy() {
+    buildLitQueue();
+    renderLiteracy();
+    showScreen("literacy");
+  }
+
+  async function toggleRecord() {
+    var btn = document.getElementById("btnRecord");
+    var hint = document.getElementById("recordHint");
+    if (state.recording) {
+      try {
+        if (state.mediaRecorder && state.mediaRecorder.state !== "inactive") state.mediaRecorder.stop();
+      } catch (e) {}
+      state.recording = false;
+      btn.textContent = "🎤 跟读录音";
+      hint.textContent = "录音结束，可以再试一次";
+      speak("录音结束");
+      if (state.mediaStream) {
+        state.mediaStream.getTracks().forEach(function (t) { t.stop(); });
+        state.mediaStream = null;
+      }
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      speak("当前浏览器不支持录音");
+      hint.textContent = "当前浏览器不支持录音";
+      return;
+    }
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.mediaStream = stream;
+      state.recordedChunks = [];
+      var rec = new MediaRecorder(stream);
+      state.mediaRecorder = rec;
+      rec.ondataavailable = function (ev) {
+        if (ev.data && ev.data.size > 0) state.recordedChunks.push(ev.data);
+      };
+      rec.onstop = function () {
+        // keep local only; no upload
+      };
+      rec.start();
+      state.recording = true;
+      btn.textContent = "⏹ 结束录音";
+      hint.textContent = "正在录音，请大声读出来";
+      speak("开始录音");
+    } catch (err) {
+      speak("没法使用麦克风，请在浏览器设置里允许麦克风权限");
+      hint.textContent = "麦克风权限异常，请允许后重试";
+    }
+  }
+
+  function startQuiz(count) {
+    closeModal("modal-quiz");
+    var queue = [];
+    var guard = 0;
+    while (queue.length < count && guard < count * 8) {
+      guard++;
+      var item = weightedPick(queue.length ? queue[queue.length - 1].char : null);
+      if (!queue.length || queue[queue.length - 1].char !== item.char) queue.push(item);
+    }
+    while (queue.length < count) queue.push(CHAR_BANK[queue.length % CHAR_BANK.length]);
+    state.quiz = { total: count, index: 0, correct: 0, wrongList: [], queue: queue };
+    renderQuiz();
+    showScreen("quiz");
+  }
+
+  function renderQuiz() {
+    var q = state.quiz;
+    var item = q.queue[q.index];
+    document.getElementById("quizProgress").textContent = (q.index + 1) + " / " + q.total;
+    document.getElementById("quizBar").style.width = Math.round((q.index / q.total) * 100) + "%";
+    document.getElementById("quizPrompt").textContent = item.emoji;
+    document.getElementById("quizHint").textContent = item.pinyin;
+    speak("请选出" + item.char);
+    var opts = shuffle([item].concat(shuffle(CHAR_BANK.filter(function (c) { return c.char !== item.char; })).slice(0, 3)));
+    var box = document.getElementById("quizOptions");
+    box.innerHTML = "";
+    opts.forEach(function (opt) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-ghost option w-full";
+      btn.textContent = opt.char;
+      btn.addEventListener("click", function () { answerQuiz(opt.char === item.char, item); });
+      box.appendChild(btn);
+    });
+  }
+
+  function answerQuiz(ok, item) {
+    if (ok) {
+      state.quiz.correct += 1;
+      setCharLevel(item.char, charLevel(item.char) + 1);
+      praiseAndRead(item);
+    } else {
+      setCharLevel(item.char, charLevel(item.char) - 1);
+      markWrong(item.char);
+      if (state.quiz.wrongList.indexOf(item.char) < 0) state.quiz.wrongList.push(item.char);
+      speak("正确答案是" + item.char);
+    }
+    setTimeout(function () {
+      state.quiz.index += 1;
+      if (state.quiz.index >= state.quiz.total) finishQuiz();
+      else renderQuiz();
+    }, 700);
+  }
+
+  function finishQuiz() {
+    var q = state.quiz;
+    var rate = Math.round((q.correct / q.total) * 100);
+    document.getElementById("quizBar").style.width = "100%";
+    var wrongText = q.wrongList.length ? q.wrongList.join("、") : "无";
+    document.getElementById("quizReport").innerHTML =
+      "<div>总题数：<b>" + q.total + "</b></div>" +
+      "<div>答对：<b>" + q.correct + "</b></div>" +
+      "<div>正确率：<b>" + rate + "%</b></div>" +
+      "<div>做错汉字：<b>" + wrongText + "</b></div>";
+    showScreen("quiz-result");
+    speak("测验结束，正确率百分之" + rate);
+  }
+
+  function startThink(mode) {
+    state.think = { mode: mode, index: 0, selected: null, classifyPick: null, sortPicked: [], answered: false, classifyMap: {} };
+    var titles = { observe: "观察力", classify: "分类力", sort: "排序力", pattern: "逻辑力", express: "表达力" };
+    document.getElementById("thinkTitle").textContent = titles[mode] || "思维";
+    renderThink();
+    showScreen("think");
+  }
+
+  function thinkLevels() {
+    return THINK_LEVELS[state.think.mode] || [];
+  }
+
+  function renderThink() {
+    var levels = thinkLevels();
+    var idx = state.think.index % levels.length;
+    var level = levels[idx];
+    state.think.selected = null;
+    state.think.classifyPick = null;
+    state.think.sortPicked = [];
+    state.think.answered = false;
+    state.think.classifyMap = {};
+    document.getElementById("thinkStep").textContent = (idx + 1) + " / " + levels.length;
+    document.getElementById("thinkFeedback").textContent = "";
+    document.getElementById("btnThinkCheck").classList.remove("hidden");
+    document.getElementById("btnThinkNext").classList.add("hidden");
+    document.getElementById("thinkPrompt").textContent = level.prompt || "看图说一句话";
+    var body = document.getElementById("thinkBody");
+    body.innerHTML = "";
+
+    if (state.think.mode === "observe") {
+      var grid = document.createElement("div");
+      grid.className = "grid-think";
+      level.items.forEach(function (it, i) {
+        var tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "think-tile";
+        tile.textContent = it;
+        tile.addEventListener("click", function () {
+          if (state.think.answered) return;
+          state.think.selected = i;
+          grid.querySelectorAll(".think-tile").forEach(function (el) { el.classList.remove("selected"); });
+          tile.classList.add("selected");
+        });
+        grid.appendChild(tile);
+      });
+      body.appendChild(grid);
+    } else if (state.think.mode === "classify") {
+      var itemRow = document.createElement("div");
+      itemRow.className = "flex flex-wrap gap-2 mb-3";
+      level.items.forEach(function (it) {
+        var tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "think-tile";
+        tile.style.minHeight = "64px";
+        tile.style.minWidth = "64px";
+        tile.textContent = it;
+        tile.dataset.item = it;
+        tile.addEventListener("click", function () {
+          if (state.think.answered) return;
+          state.think.classifyPick = it;
+          itemRow.querySelectorAll(".think-tile").forEach(function (el) { el.classList.remove("selected"); });
+          tile.classList.add("selected");
+        });
+        itemRow.appendChild(tile);
+      });
+      body.appendChild(itemRow);
+      level.baskets.forEach(function (b, bi) {
+        var wrap = document.createElement("div");
+        wrap.className = "mb-2";
+        wrap.innerHTML = "<div class='font-bold mb-1'>" + b.name + "</div>";
+        var basket = document.createElement("div");
+        basket.className = "basket";
+        basket.addEventListener("click", function () {
+          if (state.think.answered || !state.think.classifyPick) return;
+          var item = state.think.classifyPick;
+          state.think.classifyMap[item] = bi;
+          basket.textContent = "";
+          Object.keys(state.think.classifyMap).forEach(function (k) {
+            if (state.think.classifyMap[k] === bi) {
+              var span = document.createElement("span");
+              span.className = "text-3xl";
+              span.textContent = k;
+              basket.appendChild(span);
+            }
+          });
+          var sourceBtn = itemRow.querySelector('[data-item="' + item + '"]');
+          if (sourceBtn) sourceBtn.style.visibility = "hidden";
+          state.think.classifyPick = null;
+        });
+        wrap.appendChild(basket);
+        body.appendChild(wrap);
+      });
+    } else if (state.think.mode === "sort") {
+      var hint = document.createElement("div");
+      hint.className = "text-sm text-slate-500 mb-2";
+      hint.textContent = "按正确顺序依次点击";
+      body.appendChild(hint);
+      var row = document.createElement("div");
+      row.className = "flex flex-wrap gap-2 mb-3";
+      shuffle(level.items).forEach(function (it) {
+        var tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "think-tile";
+        tile.style.minHeight = "64px";
+        tile.style.minWidth = "64px";
+        tile.textContent = it;
+        tile.addEventListener("click", function () {
+          if (state.think.answered) return;
+          if (state.think.sortPicked.indexOf(it) >= 0) return;
+          state.think.sortPicked.push(it);
+          tile.classList.add("selected");
+          seq.textContent = state.think.sortPicked.join(" → ");
+        });
+        row.appendChild(tile);
+      });
+      body.appendChild(row);
+      var seq = document.createElement("div");
+      seq.className = "font-bold text-lg";
+      seq.id = "sortSeq";
+      seq.textContent = "还没开始";
+      body.appendChild(seq);
+    } else if (state.think.mode === "pattern") {
+      var grid2 = document.createElement("div");
+      grid2.className = "grid-think";
+      level.options.forEach(function (it, i) {
+        var tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "think-tile";
+        tile.textContent = it;
+        tile.addEventListener("click", function () {
+          if (state.think.answered) return;
+          state.think.selected = i;
+          grid2.querySelectorAll(".think-tile").forEach(function (el) { el.classList.remove("selected"); });
+          tile.classList.add("selected");
+        });
+        grid2.appendChild(tile);
+      });
+      body.appendChild(grid2);
+    } else if (state.think.mode === "express") {
+      var big = document.createElement("div");
+      big.className = "text-5xl text-center mb-3";
+      big.textContent = level.emoji;
+      body.appendChild(big);
+      var tip = document.createElement("div");
+      tip.className = "text-center text-slate-600 mb-3";
+      tip.textContent = "先听示范，再自己说，也可以录音";
+      body.appendChild(tip);
+      var row2 = document.createElement("div");
+      row2.className = "grid gap-2";
+      var b1 = document.createElement("button");
+      b1.type = "button";
+      b1.className = "btn btn-sky w-full";
+      b1.textContent = "🔊 听示范句子";
+      b1.addEventListener("click", function () { speak(level.sentence); });
+      var b2 = document.createElement("button");
+      b2.type = "button";
+      b2.className = "btn btn-coral w-full";
+      b2.textContent = "🎤 我来说";
+      b2.addEventListener("click", function () { toggleRecord(); });
+      var b3 = document.createElement("button");
+      b3.type = "button";
+      b3.className = "btn btn-mint w-full";
+      b3.textContent = "✅ 我说完了";
+      b3.addEventListener("click", function () {
+        state.think.answered = true;
+        addStar(1);
+        document.getElementById("thinkFeedback").textContent = "表达真棒！⭐";
+        speak("说得真棒！");
+        document.getElementById("btnThinkCheck").classList.add("hidden");
+        document.getElementById("btnThinkNext").classList.remove("hidden");
+      });
+      row2.appendChild(b1);
+      row2.appendChild(b2);
+      row2.appendChild(b3);
+      body.appendChild(row2);
+      document.getElementById("btnThinkCheck").classList.add("hidden");
+    }
+    speak(document.getElementById("thinkPrompt").textContent);
+  }
+
+  function addStar(n) {
+    var p = profile();
+    if (!p) return;
+    p.thinkStars = (p.thinkStars || 0) + n;
+    saveStore();
+    renderHome();
+  }
+
+  function checkThink() {
+    if (state.think.answered) return;
+    var levels = thinkLevels();
+    var level = levels[state.think.index % levels.length];
+    var ok = false;
+    if (state.think.mode === "observe") {
+      ok = state.think.selected === level.answer;
+    } else if (state.think.mode === "pattern") {
+      ok = state.think.selected === level.answer;
+    } else if (state.think.mode === "sort") {
+      ok = JSON.stringify(state.think.sortPicked) === JSON.stringify(level.order);
+    } else if (state.think.mode === "classify") {
+      ok = level.items.every(function (it) {
+        var bi = state.think.classifyMap[it];
+        if (bi == null) return false;
+        return level.baskets[bi].accept.indexOf(it) >= 0;
+      });
+    } else {
+      ok = true;
+    }
+    state.think.answered = true;
+    var fb = document.getElementById("thinkFeedback");
+    if (ok) {
+      fb.textContent = "答对了！Excellent！";
+      addStar(1);
+      speak("太棒了！Excellent！");
+    } else {
+      fb.textContent = "再想一想，可以看提示再试下一题";
+      speak("再想一想，我们看下一题");
+    }
+    document.getElementById("btnThinkCheck").classList.add("hidden");
+    document.getElementById("btnThinkNext").classList.remove("hidden");
+  }
+
+  function nextThink() {
+    state.think.index += 1;
+    if (state.think.index >= thinkLevels().length) {
+      speak("这一组完成啦，你真棒");
+      showScreen("think-hub");
+      return;
+    }
+    renderThink();
+  }
+
+  function bindGlobal() {
+    document.body.addEventListener("click", function (ev) {
+      var t = ev.target.closest("[data-speak]");
+      if (t && !t.closest("input") && t.tagName !== "INPUT") {
+        var txt = t.getAttribute("data-speak") || t.textContent;
+        if (txt) speak(txt.trim());
+      }
+      var open = ev.target.closest("[data-open]");
+      if (open) {
+        var mid = open.getAttribute("data-open");
+        if (mid === "modal-bgm") renderBgmChoices();
+        openModal(mid);
+      }
+      var close = ev.target.closest("[data-close]");
+      if (close) closeModal(close.getAttribute("data-close"));
+      var nav = ev.target.closest("[data-nav]");
+      if (nav) {
+        var to = nav.getAttribute("data-nav");
+        if (to === "home") { renderHome(); showScreen("home"); }
+        else if (to === "think-hub") showScreen("think-hub");
+        else if (to === "users") showScreen("users");
+      }
+      var thinkBtn = ev.target.closest("[data-think]");
+      if (thinkBtn) startThink(thinkBtn.getAttribute("data-think"));
+      var quizCount = ev.target.closest("[data-quiz-count]");
+      if (quizCount) startQuiz(parseInt(quizCount.getAttribute("data-quiz-count"), 10));
+    });
+
+    document.getElementById("btnAddUser").addEventListener("click", function () {
+      var input = document.getElementById("newUserName");
+      var name = (input.value || "").trim();
+      if (!name) {
+        speak("请先输入名字");
+        input.focus();
+        return;
+      }
+      if (name.length > 8) name = name.slice(0, 8);
+      var id = uid();
+      state.store.users.push({ id: id, name: name, createdAt: Date.now() });
+      state.store.profiles[id] = defaultProfile();
+      saveStore();
+      input.value = "";
+      renderUsers();
+      speak("已添加" + name);
+    });
+
+    document.getElementById("btnSwitchUser").addEventListener("click", function () {
+      state.store.currentUserId = null;
+      saveStore();
+      showScreen("users");
+    });
+    document.getElementById("btnGoLiteracy").addEventListener("click", startLiteracy);
+    document.getElementById("btnGoThink").addEventListener("click", function () { showScreen("think-hub"); });
+    document.getElementById("btnGoQuiz").addEventListener("click", function () { openModal("modal-quiz"); });
+    document.getElementById("btnAbout").addEventListener("click", function () { openModal("modal-about"); });
+    document.getElementById("btnMathSoon").addEventListener("click", function () { speak("数学模块即将开放，先来练思维和识字吧"); });
+    document.getElementById("btnEngSoon").addEventListener("click", function () { speak("英语模块即将开放，先来练思维和识字吧"); });
+    document.getElementById("btnReadChar").addEventListener("click", function () {
+      var item = currentLit();
+      speak(item.char);
+    });
+    document.getElementById("btnRecord").addEventListener("click", function () { toggleRecord(); });
+    document.getElementById("btnKnow").addEventListener("click", function () {
+      var item = currentLit();
+      setCharLevel(item.char, charLevel(item.char) + 1);
+      speak("真棒！" + item.char);
+      setTimeout(nextLit, 500);
+    });
+    document.getElementById("btnUnknown").addEventListener("click", function () {
+      var item = currentLit();
+      setCharLevel(item.char, charLevel(item.char) - 1);
+      markWrong(item.char);
+      comfortAndRead(item);
+      setTimeout(nextLit, 700);
+    });
+    document.getElementById("btnThinkCheck").addEventListener("click", checkThink);
+    document.getElementById("btnThinkNext").addEventListener("click", nextThink);
+    document.getElementById("btnThinkSpeak").addEventListener("click", function () {
+      speak(document.getElementById("thinkPrompt").textContent);
+    });
+    document.getElementById("btnQuizExit").addEventListener("click", function () {
+      renderHome();
+      showScreen("home");
+    });
+
+    document.querySelectorAll(".modal-mask").forEach(function (mask) {
+      mask.addEventListener("click", function (ev) {
+        if (ev.target === mask) mask.classList.remove("open");
+      });
+    });
+
+    if (window.speechSynthesis) {
+      speechSynthesis.onvoiceschanged = function () { pickVoice(); };
+    }
+  }
+
+  function init() {
+    state.store = loadStore();
+    ensureProfiles(state.store);
+    if (!state.store.profiles) state.store.profiles = {};
+    state.store.users.forEach(function (u) {
+      if (!state.store.profiles[u.id]) state.store.profiles[u.id] = defaultProfile();
+    });
+    saveStore();
+    if (isWeChat()) document.getElementById("wechatBanner").classList.add("show");
+    renderUsers();
+    renderBgmChoices();
+    bindGlobal();
+    if (state.store.bgm && state.store.bgm !== "none") {
+      // wait for user gesture; start after first click anywhere
+      document.body.addEventListener("click", function once() {
+        startBgm(state.store.bgm);
+        document.body.removeEventListener("click", once);
+      });
+    }
+    showScreen("users");
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
