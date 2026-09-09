@@ -26,4 +26,4 @@
 
 ### Task 5: 门禁
 
-- [x] 语法检查 + 本地 HTTP 冒烟写 `evidence/smoke-2026-09-09-mp.md`
+- [x] 语法检查 + 本地 HTTP 冒烟写 `docs/dev/evidence/smoke-2026-09-09-mp.md`

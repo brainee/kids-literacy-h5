@@ -1,8 +1,0 @@
-{
-  "name": "@kids/audio",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "BGM / sfx / AudioContext 解锁",
-  "main": "src/index.js"
-}

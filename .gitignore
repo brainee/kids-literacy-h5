@@ -1,4 +1,9 @@
 .DS_Store
-evidence/_extract.js
 *.log
 .moss-twin
+node_modules/
+**/node_modules/
+**/dist/
+packages/web/dist/
+*.tsbuildinfo
+.vite/

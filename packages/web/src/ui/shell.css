@@ -1,0 +1,118 @@
+.shell {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+  min-height: 100dvh;
+}
+.shell-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.shell-bar h1 {
+  margin: 4px 0 0;
+  font-size: 1.5rem;
+}
+.eyebrow {
+  font-size: 0.85rem;
+  color: #5b6b7c;
+  font-weight: 700;
+}
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+.chip {
+  background: #fff;
+  border: 2px solid rgba(31, 42, 55, 0.1);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+.shell-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.shell-nav a {
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
+  color: #083344;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid rgba(31, 42, 55, 0.08);
+  border-radius: 16px;
+  padding: 10px 6px;
+}
+.shell-main {
+  display: grid;
+  gap: 12px;
+}
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(31, 42, 55, 0.08);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(78, 195, 247, 0.15);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 18px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.08);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-sky {
+  background: #4ec3f7;
+  color: #083344;
+}
+.btn-mint {
+  background: #6fdfb5;
+  color: #064e3b;
+}
+.btn-sun {
+  background: #ffd166;
+  color: #5b3b00;
+}
+.btn-coral {
+  background: #ff8a7a;
+  color: #5b1212;
+}
+.btn-ghost {
+  background: #fff;
+  border: 2px solid rgba(31, 42, 55, 0.12);
+  box-shadow: none;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.hero {
+  font-size: clamp(64px, 18vw, 96px);
+  text-align: center;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.muted {
+  color: #5b6b7c;
+  font-weight: 600;
+}
+.stack {
+  display: grid;
+  gap: 10px;
+}

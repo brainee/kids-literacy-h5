@@ -1,8 +1,0 @@
-{
-  "name": "@kids/literacy",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "字库与识字相关数据",
-  "main": "src/index.js"
-}

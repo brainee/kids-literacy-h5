@@ -91,7 +91,7 @@ pet: { name, level, hunger, foods: { carrot, apple, fish }, lastFedAt }
 
 ## 验收
 
-见根目录 `CHECKLIST.md`；自动化证据：`evidence/smoke-2026-09-09.md`。
+见根目录 `CHECKLIST.md`；自动化证据：`docs/dev/evidence/smoke-2026-09-09.md`。
 
 ## 仓库路径勘误
 

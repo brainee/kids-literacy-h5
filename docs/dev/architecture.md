@@ -1,40 +1,37 @@
-# 架构：多包 + 原生 ESM（零构建）
+# 架构
 
-**规格：** [`../product/specs/2026-09-09-multipackage-docs-design.md`](../product/specs/2026-09-09-multipackage-docs-design.md)
+`packages/` **预留多项目**（未来可加 `server` 等）；**当前只有一个项目：`packages/web`**。
 
-## 运行时
+## 2.0 运行时（主）
 
 ```text
 Browser
-  └─ index.html          # Pages 入口：DOM 壳 + Tailwind
-       └─ packages/app/src/main.js   # type=module
-            ├─ @kids/core
-            ├─ @kids/audio
-            ├─ @kids/speech
-            ├─ @kids/literacy
-            ├─ @kids/think
-            ├─ @kids/quiz
-            └─ @kids/pet
+  └─ packages/web/dist/index.html     # GitHub Actions / Vite build
+       └─ React Router
+            ├─ domain/  (StoreV2 · AgeBand · capability)
+            ├─ content/ (LessonContent 示例课)
+            ├─ pages/   (今日 / 课 4 拍 / 星宝 / 家长)
+            └─ lib/speak (Web Speech 基础)
 ```
 
-导入使用**相对路径**（浏览器原生 ESM），例如：
+本地：`cd packages/web && npm run dev`  
+构建：`cd packages/web && npm run build` → base `/kids-literacy-h5/`（Pages）
 
-```js
-import { loadStore, saveStore } from "../../core/src/store.js";
+> 根目录无 `package.json`：单包阶段避免 workspace 空壳；第二项目出现后再加。
+
+## 1.x 遗留（同项目内单树）
+
+```text
+Browser
+  └─ legacy.html
+       └─ packages/web/legacy/src/main.js
+            └─ core | audio | speech | literacy | think | quiz | pet
 ```
 
-不依赖 npm install / bundler。本地请用静态服务器（`python3 -m http.server` 或 `npx serve`），避免 `file://` 下 module CORS 问题。
+相对路径 ESM；需 HTTP 静态服务。CI 把 `legacy.html` + `packages/web/legacy` 拷进 dist。
 
-## 包边界
+## 文档 / 证据
 
-| 包 | 可依赖 | 不可依赖 |
-|----|--------|----------|
-| core | — | 其它业务包 |
-| audio / speech | core（可选） | literacy/think/pet |
-| literacy / think / quiz / pet | core, audio, speech | 彼此循环依赖 |
-| app | 全部 | —（唯一组装点） |
-
-## 文档对应
-
-- 改包行为 → 更新该包 `README.md` + 必要时 `docs/product/specs`
-- 改拆包方式 → 更新本文件 + 1.2 规格
+- 规格与计划 → `docs/product` / `docs/dev`
+- 冒烟证据 → `docs/dev/evidence/`
+- 改行为 → `packages/web` + 必要时规格

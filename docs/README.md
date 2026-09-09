@@ -1,7 +1,6 @@
 # 文档索引
 
-按主题分开；**开发/Agent 文档** 与 **产品/调研主题文档** 不混放。  
-代码包文档跟包走：`packages/*/README.md`。
+按主题分开；**开发/Agent 文档** 与 **产品/调研主题文档** 不混放。
 
 **驱动 AI：** 根目录 [`AGENTS.md`](../AGENTS.md) · [`dev/sdlc/TASKS.md`](./dev/sdlc/TASKS.md)
 
@@ -9,9 +8,10 @@
 
 | 文档 | 说明 |
 |------|------|
-| [architecture.md](./dev/architecture.md) | 多包 + 原生 ESM 架构 |
+| [architecture.md](./dev/architecture.md) | `packages/web` 单项目 + legacy |
 | [sdlc/](./dev/sdlc/) | 阶段总览、实现计划、TASKS 看板 |
-| 根 [`CHECKLIST.md`](../CHECKLIST.md) / [`evidence/`](../evidence/) | 自测与证据 |
+| [evidence/](./dev/evidence/) | 冒烟与验收证据 |
+| 根 [`CHECKLIST.md`](../CHECKLIST.md) | 人工自测清单 |
 
 ## Product（产品主题）
 
@@ -19,7 +19,9 @@
 |------|------|------|
 | [一期设计](./product/specs/2026-09-07-kids-thinking-literacy-design.md) | 识字+思维 | done |
 | [1.1 设计](./product/specs/2026-09-09-reward-pet-tts-design.md) | TTS/录音/金币星宝/BGM | done |
-| [1.2 设计](./product/specs/2026-09-09-multipackage-docs-design.md) | 多包代码 + 文档分层 | implemented |
+| [1.2 设计](./product/specs/2026-09-09-multipackage-docs-design.md) | 文档分层；多包已收拢（见架构） | superseded-in-part |
+| [2.0 能力乐园](./product/specs/2026-09-09-capability-lab-2.0-design.md) | 能力体系×三视角×模块化×技术演进 | approved |
+| [2.0-A 计划](./dev/sdlc/2026-09-09-capability-lab-2.0a-plan.md) | Vite+React 骨架与课程引擎 | done |
 
 ## Research（调研主题）
 
@@ -27,27 +29,18 @@
 |------|------|
 | [开源儿童应用调研](./research/2026-09-07-open-source-kids-apps.md) | 免费/开源/少折腾对标 |
 
-## Packages（跟代码）
+## 代码
 
-| 包 | 职责 |
-|----|------|
-| `@kids/core` | 存档 / profile |
-| `@kids/audio` | BGM / sfx / unlock |
-| `@kids/speech` | TTS |
-| `@kids/literacy` | 字库与识字 |
-| `@kids/think` | 思维关卡 |
-| `@kids/quiz` | 测验 |
-| `@kids/pet` | 金币 / 星宝 / 庆祝 |
-| `@kids/app` | 组装与路由 |
+| 路径 | 职责 |
+|------|------|
+| [`packages/web`](../packages/web/) | 2.0 主应用（唯一当前项目） |
+| [`packages/web/legacy`](../packages/web/legacy/) | 1.x ESM 遗留 |
 
-## 旧路径
-
-`docs/specs` · `docs/sdlc` · `docs/references` 仅保留迁移说明，指向新目录。
+`packages/` 目录预留未来第二项目（如 server）；当前不要再拆多包。
 
 ## 约定
 
 1. 产品行为变更 → `docs/product/specs/`  
-2. 工程流程/拆包/Agent → `docs/dev/`  
+2. 工程流程 / Agent → `docs/dev/`  
 3. 外部调研 → `docs/research/`  
-4. 包 API → `packages/<name>/README.md`  
-5. 完成前：TASKS + evidence
+4. 完成前：TASKS + `docs/dev/evidence/`

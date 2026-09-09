@@ -45,5 +45,5 @@
 
 | 日期 | 执行人 | 结果 | 备注 |
 |------|--------|------|------|
-| 2026-09-07 | agent | 见 evidence/smoke-2026-09-07.md | 自动化冒烟 + 静态扫描 |
-| 2026-09-09 | agent | PASS 见 evidence/smoke-2026-09-09.md | BGM 存档、答对金币+庆祝、星宝买喂持久化（Chrome CDP）；听感请本机再确认 |
+| 2026-09-07 | agent | 见 docs/dev/evidence/smoke-2026-09-07.md | 自动化冒烟 + 静态扫描 |
+| 2026-09-09 | agent | PASS 见 docs/dev/evidence/smoke-2026-09-09.md | BGM 存档、答对金币+庆祝、星宝买喂持久化（Chrome CDP）；听感请本机再确认 |

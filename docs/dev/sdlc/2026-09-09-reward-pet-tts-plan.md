@@ -45,7 +45,7 @@
 ### Task 6: 测试门禁（必做）
 
 - [x] Chrome CDP 冒烟：BGM store、答对金币+庆祝、星宝买喂持久化  
-      → `evidence/smoke-2026-09-09.md`
+      → `docs/dev/evidence/smoke-2026-09-09.md`
 - [x] 更新 `CHECKLIST.md` 系统项与自测记录
 - [ ] 本机人工听感：八音盒点击后立即有旋律（环境相关，需有声设备）
 

@@ -1,14 +1,16 @@
 # 1.2 多包代码布局 + 文档分层
 
 **日期：** 2026-09-09  
-**状态：** approved（Owner 要求「docs 重新设计 + 代码多包 + 区分 dev/主题文档」）  
-**约束延续：** 零 npm 构建、可静态托管、LocalStorage、无后端。多包 = **目录包 + 原生 ES Module**，不是强制上 Vite。
+**状态：** partially superseded（2026-09-09 晚）  
+**约束延续（文档分层仍有效）：** 静态托管、LocalStorage、无后端。
+
+> **修订（Owner）：** 多包 `@kids/*` 仅为未来 server 等预留思路；**当前代码收拢为单一项目 `packages/web`**（含 `legacy/`）。证据迁至 `docs/dev/evidence/`。见 `docs/dev/architecture.md` 与 T-042。
 
 ## 目标
 
-1. 代码按领域拆成 `packages/*`，入口变薄，便于 AI/人按包改。  
-2. 文档区分 **dev（工程/流程）** 与 **主题（产品/调研）**，并与包结构对应。  
-3. GitHub Pages 仍可从仓库根打开（保留根 `index.html` 入口）。
+1. ~~代码按领域拆成 `packages/*`~~ → **现行：`packages/web` 单项目**；`packages/` 目录留给未来第二运行时。  
+2. 文档区分 **dev（工程/流程）** 与 **主题（产品/调研）**（仍有效）。  
+3. GitHub Pages 可部署（现行：Actions 构建 `packages/web`）。
 
 ## 非目标
 
@@ -62,7 +64,7 @@ packages/*/README.md        # 包级文档（跟代码走）
 | 外部调研 / 对标 | `docs/research/` | 开源儿童应用 |
 | 某个包怎么用 | `packages/<name>/README.md` | `@kids/pet` API |
 
-根目录保留：`AGENTS.md`、`README.md`、`CHECKLIST.md`、`evidence/`（入口级，方便 Agent 发现）。
+根目录保留：`AGENTS.md`、`README.md`、`CHECKLIST.md`；证据 → `docs/dev/evidence/`。
 
 ## 迁移原则
 

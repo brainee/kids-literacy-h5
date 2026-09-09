@@ -1,8 +1,0 @@
-{
-  "name": "@kids/quiz",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "测验（由 app 编排，本包预留导出）",
-  "main": "src/index.js"
-}

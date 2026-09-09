@@ -1,8 +1,0 @@
-{
-  "name": "@kids/core",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "存档、profile、运行时 state",
-  "main": "src/index.js"
-}
