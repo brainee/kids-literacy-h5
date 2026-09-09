@@ -32,11 +32,12 @@ npx --yes serve -p 5173
 2. Build command 留空；Output directory 填 `/` 或项目根  
 3. 获得免费域名：`https://<项目名>.pages.dev`
 
-### GitHub Pages
+### GitHub Pages（已开通）
 
-1. 新建公开仓库，推送本目录  
-2. Settings → Pages → Deploy from branch → `/ (root)`  
-3. 访问：`https://<user>.github.io/<repo>/`
+- **线上地址：** https://brainee.github.io/kids-literacy-h5/
+- **配置：** Settings → Pages → Deploy from a branch → `main` / `/ (root)`
+- **原理：** 公开仓库把 `main` 根目录当静态站发布；每次 `git push` 到 `main` 会自动重新构建（约 1 分钟）
+- 本项目是单文件 `index.html` + CDN，无构建命令，适合 branch 部署（不必用 GitHub Actions）
 
 ### 免费自定义域名注意
 
