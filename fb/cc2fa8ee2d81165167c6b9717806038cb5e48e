@@ -1,0 +1,143 @@
+packages/pet/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/speech/src/index.js
+  s_01e4adfc46a977::t_4796f4564701ac 1-3
+packages/speech/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/audio/src/audio.js
+  s_01e4adfc46a977::t_4796f4564701ac 1-137
+packages/audio/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+packages/pet/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+docs/dev/sdlc/2026-09-09-multipackage-docs-plan.md
+  s_01e4adfc46a977::t_05e77f4f06f77e 1,3,5,7-9,11,16,22,27
+  s_01e4adfc46a977::t_664b0eb4652ee9 13-14,18-20,24-25,29
+.cursor/rules/agents-workflow.mdc
+  s_01e4adfc46a977::t_3f7e2f8babcaf8 2,8-13
+  s_01e4adfc46a977::t_f41a2508e94a65 1,3-7
+packages/pet/src/index.js
+  s_01e4adfc46a977::t_4796f4564701ac 1-5
+README.md
+  s_01e4adfc46a977::t_5eb537e7c7e992 6-7,12-15,21-22,24-25,28,30-36,38,42-44,46,48,53-54,56,58-61,65-67
+packages/pet/src/pet.js
+  s_01e4adfc46a977::t_374e021c804bef 1
+  s_01e4adfc46a977::t_4796f4564701ac 2-194
+packages/audio/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/speech/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_3e908998f99c1b 10
+  s_01e4adfc46a977::t_9b0078a4937975 3-4,11-33
+packages/core/src/runtime.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-31
+docs/dev/sdlc/2026-09-09-reward-pet-tts-plan.md
+  ai_agent 1-56
+docs/product/specs/2026-09-09-reward-pet-tts-design.md
+  s_01e4adfc46a977::t_c374e932ea02f5 1-99
+docs/sdlc/README.md
+  s_01e4adfc46a977::t_7e7d29d1c70767 1,3
+packages/literacy/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/think/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/think/src/levels.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-57
+evidence/smoke-2026-09-09-mp.md
+  s_01e4adfc46a977::t_a43b5939680a5d 5,8-11
+  s_01e4adfc46a977::t_c1ad0569cf8d93 6-7,12-13,15
+  s_01e4adfc46a977::t_c374e932ea02f5 1-4,14,16-17
+packages/app/src/main.js
+  s_01e4adfc46a977::t_8fafc4b9ab265b 7
+  s_01e4adfc46a977::t_0d53f832e435be 1-5,8-11,13-883
+packages/literacy/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+packages/quiz/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+docs/README.md
+  s_01e4adfc46a977::t_701aa093a713ff 3-4,6,8,10-14,16,20-21,24,28,30,32-45,49-53
+  s_01e4adfc46a977::t_fc864035f03657 22
+  s_01e4adfc46a977::t_c75957e9515f85 7
+  s_01e4adfc46a977::t_c3b355540479cf 1-2,5,9,15,17-19,23,25-27,29,31,46-48
+packages/core/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+docs/specs/README.md
+  s_01e4adfc46a977::t_7e7d29d1c70767 1-3
+packages/audio/src/styles.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+packages/core/src/store.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-91
+CHECKLIST.md
+  s_01e4adfc46a977::t_6106e3b924c876 35-37,49
+packages/literacy/src/index.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1
+packages/app/package.json
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-8
+index.html
+  s_01e4adfc46a977::t_b884ced009781d 194,197,199-203,205,209
+  s_01e4adfc46a977::t_c7fd6cc44b7065 380
+  s_01e4adfc46a977::t_35f8016bd83c9e 242-243
+  s_01e4adfc46a977::t_67e526db3a37c7 388
+  s_01e4adfc46a977::t_b90c62b46fd007 93-143,147-152
+  s_01e4adfc46a977::t_29c660427144dc 224,226-229
+  s_01e4adfc46a977::t_2d6fac725f6fb3 255-281
+packages/pet/src/foods.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-6
+packages/think/src/index.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1
+packages/core/src/dom.js
+  s_01e4adfc46a977::t_4da53eb56fba0c 1-22
+packages/quiz/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+packages/app/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+packages/literacy/src/chars.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-53
+packages/quiz/src/index.js
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-2
+packages/think/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+docs/dev/sdlc/README.md
+  s_01e4adfc46a977::t_928ea9d730d704 1-11,13-19
+  s_01e4adfc46a977::t_fc920e24cdee6c 12
+evidence/smoke-2026-09-09.md
+  s_01e4adfc46a977::t_433d8c4aeebfd0 5,7-9,11,13-14,17-20,22-23,25-31,33,36-37
+  s_01e4adfc46a977::t_2045aaba196f68 1-4,6,10,12,15-16,21,24,32,34-35
+packages/audio/src/index.js
+  s_01e4adfc46a977::t_4796f4564701ac 1-4
+docs/references/README.md
+  s_01e4adfc46a977::t_7e7d29d1c70767 1-3
+packages/core/src/index.js
+  s_01e4adfc46a977::t_51c2fc9e8805d2 6
+  s_01e4adfc46a977::t_4f40f554f4b9ce 1-5
+AGENTS.md
+  s_01e4adfc46a977::t_dc326a0afceaef 1-8,10-11,13,15,18-22,31-34,40-42,44,46,49,51,56,58,69,71
+  s_01e4adfc46a977::t_c3222613c3bb8d 9,12,14,16-17,23-30,35-39,43,45,47-48,50,52-55,57,59-68,70,72-73
+docs/product/specs/2026-09-09-multipackage-docs-design.md
+  s_01e4adfc46a977::t_40e0fab05c13e4 1-77
+docs/dev/architecture.md
+  s_01e4adfc46a977::t_16f37332ad9867 1-40
+packages/speech/src/speech.js
+  s_01e4adfc46a977::t_4796f4564701ac 1-107
+packages/core/README.md
+  s_01e4adfc46a977::t_5e17336142abaf 1-12
+.gitignore
+  s_01e4adfc46a977::t_c2a54f4b8e34d5 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.43-trip",
+  "base_commit_sha": "fbcc2fa8ee2d81165167c6b9717806038cb5e48e",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
