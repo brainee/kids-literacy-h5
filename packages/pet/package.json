@@ -1,0 +1,8 @@
+{
+  "name": "@kids/pet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "金币、星宝、庆祝",
+  "main": "src/index.js"
+}

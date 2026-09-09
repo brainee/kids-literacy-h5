@@ -33,3 +33,7 @@
 
 - [x] 语音 ducking + 程序化 BGM
 - [x] README + CHECKLIST + 自测证据
+
+---
+
+**后续迭代：** 见 [`2026-09-09-reward-pet-tts-plan.md`](./2026-09-09-reward-pet-tts-plan.md)（1.1：拟人语音、录音回放、金币/星宝、BGM 修复）。

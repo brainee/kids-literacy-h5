@@ -1,0 +1,8 @@
+{
+  "name": "@kids/speech",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "拟人 Web Speech TTS",
+  "main": "src/index.js"
+}

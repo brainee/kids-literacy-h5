@@ -3,65 +3,65 @@
 面向 3–7 岁的**纯前端**儿童 H5：以识字为载体，训练观察、分类、排序、逻辑与表达。  
 数据仅存浏览器 `localStorage`，无后端、无账号云同步。
 
+**形态：** 多包原生 ESM（`packages/*`），零 npm 构建。详见 [`docs/dev/architecture.md`](docs/dev/architecture.md)。
+
 ## 快速开始
 
 ```bash
 cd /Users/zolad/work/app/yirenge/kids-literacy-h5
-# 方式 1：直接双击打开 index.html
-open index.html
-
-# 方式 2：本地静态服务（推荐，麦克风权限更稳）
-npx --yes serve -p 5173
-# 浏览器打开 http://localhost:5173
+# 必须用静态服务（ES Module 不支持随意 file://）
+python3 -m http.server 5173
+# 或：npx --yes serve -p 5173
+# 打开 http://localhost:5173
 ```
 
 ## 功能一览
 
 - 用户：预置「星星」「月月」，可新增；数据隔离；欢迎语音
-- 识字：50 字起步（郑星辰礼乐优先）；读字 / 跟读录音 / 四选一 / 认识·不认识
-- 记忆：level + 错题加权；复习测验 5/10/15 + 报告
+- 识字：字库 + 读字 / 跟读录音回放 / 四选一 / 认识·不认识
+- 记忆：level + 错题加权；复习测验 + 报告
 - 思维乐园：观察、分类、排序、找规律、看图表达
-- 背景音乐：程序化 Web Audio（离线可用）；播报时自动降音量
+- 奖励：答对音效/庆祝/金币；「我的星宝」喂养
+- 背景音乐：程序化 Web Audio；播报时自动降音量
 - 扩展占位：数学 / 英语「即将开放」
 
-## 免费部署（一期目标）
+## 包结构（摘要）
 
-### Cloudflare Pages（推荐）
+| 包 | 职责 |
+|----|------|
+| `packages/app` | 入口组装 |
+| `packages/core` | 存档 / state / DOM |
+| `packages/audio` / `speech` | BGM·音效 / TTS |
+| `packages/literacy` / `think` / `pet` | 字库 / 关卡 / 星宝 |
+| `packages/quiz` | 测验扩展点 |
 
-1. 将本目录推到 GitHub/GitLab，或直接拖拽上传  
-2. Build command 留空；Output directory 填 `/` 或项目根  
-3. 获得免费域名：`https://<项目名>.pages.dev`
+## 免费部署
 
 ### GitHub Pages（已开通）
 
-- **线上地址：** https://brainee.github.io/kids-literacy-h5/
-- **配置：** Settings → Pages → Deploy from a branch → `main` / `/ (root)`
-- **原理：** 公开仓库把 `main` 根目录当静态站发布；每次 `git push` 到 `main` 会自动重新构建（约 1 分钟）
-- 本项目是单文件 `index.html` + CDN，无构建命令，适合 branch 部署（不必用 GitHub Actions）
+- **线上：** https://brainee.github.io/kids-literacy-h5/
+- Source：`main` / `/ (root)`（根 `index.html`）
+- 推送后约 1 分钟更新
 
-### 免费自定义域名注意
+### Cloudflare Pages
 
-- Cloudflare / GitHub 自带二级域名即可用，稳定优先  
-- Freenom 等「免费顶级域」稳定性差，不建议作为主入口  
-- 自定义域可后续在 Cloudflare 绑定（通常需自有域名年费）
+Build 留空；Output 为仓库根。
 
 ## 安全说明
 
 - 不上传用户数据、录音、进度  
-- 麦克风仅本地 MediaRecorder，关闭即释放  
-- 无第三方追踪脚本（仅 Tailwind CDN）
+- 麦克风仅本地 MediaRecorder  
+- 无第三方追踪（仅 Tailwind CDN）
 
-## SDLC 文档
+## 文档
 
-- 设计：`docs/specs/2026-09-07-kids-thinking-literacy-design.md`
-- 计划：`docs/sdlc/2026-09-07-implementation-plan.md`
-- 自测：`CHECKLIST.md`
+- **Agent：** [`AGENTS.md`](AGENTS.md)
+- **索引：** [`docs/README.md`](docs/README.md)（dev / product / research）
+- **任务：** [`docs/dev/sdlc/TASKS.md`](docs/dev/sdlc/TASKS.md)
+- **自测：** [`CHECKLIST.md`](CHECKLIST.md) · [`evidence/`](evidence/)
 
 ## 后续迭代建议
 
-1. 扩充字库与思维关卡 JSON（可拆 `data/` 仍保持零构建）  
-2. 数学（数感/加减）与英语（字母/单词）正式模块  
-3. 可选 PWA 离线缓存；可选家长导出进度（本地文件）
-
-开源对标与二期灵感（已按「免费/开源/少折腾」筛过）：见  
-`docs/references/2026-09-07-open-source-kids-apps.md`
+1. 扩充 `@kids/literacy` / `@kids/think` 数据  
+2. 新包 `@kids/math` / `@kids/english`  
+3. 可选 PWA；录音 IndexedDB

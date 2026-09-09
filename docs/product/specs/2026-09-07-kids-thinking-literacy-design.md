@@ -1,8 +1,8 @@
 # 儿童思维识字 H5 — 一期设计
 
 **日期：** 2026-09-07  
-**状态：** approved（Owner GO）  
-**仓库：** `/Users/zolad/work/app/kids-literacy-h5`（独立于 mail-foxpage）
+**状态：** approved（Owner GO）；1.1 增量见 [`2026-09-09-reward-pet-tts-design.md`](./2026-09-09-reward-pet-tts-design.md)  
+**仓库：** `/Users/zolad/work/app/yirenge/kids-literacy-h5`（GitHub：`brainee/kids-literacy-h5`）
 
 ## 目标
 
@@ -26,6 +26,13 @@
 3. 思维乐园：观察、分类、排序、规律、表达（各多关）。
 4. 复习测验：5/10/15；报告。
 5. 设置：BGM 选择；微信兼容提示；科目占位（数学/英语即将开放）。
+
+## 1.1 已落地增量（摘要）
+
+- 拟人播报节奏与口语文案；录音会话内保存与回放。  
+- 答对音效/庆祝/金币；「我的星宝」喂养成长。  
+- BGM `AudioContext` 解锁修复。  
+完整说明见 1.1 设计稿。
 
 ## 验收
 

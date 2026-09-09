@@ -1,0 +1,13 @@
+---
+description: 本仓库 Agent 强制流程（docs 分层、多包、任务看板、测试门禁）
+alwaysApply: true
+---
+
+# kids-literacy-h5 Agent 规则
+
+- 先读 `AGENTS.md` 与 `docs/dev/sdlc/TASKS.md`，再改代码。
+- 产品行为 → `docs/product/specs/`；工程/架构 → `docs/dev/`；调研 → `docs/research/`。
+- 代码改动落在对应 `packages/<name>`，并更新该包 `README.md`。
+- 保持零构建原生 ESM；勿擅自引入打包器/后端/云 TTS。
+- 本地预览必须用 HTTP 静态服务。
+- 完成前写 `evidence/`，更新 TASKS；仅 Owner 要求时 commit/push。
