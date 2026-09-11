@@ -34,7 +34,18 @@ export interface LessonContent {
       answer: number
     }
     speak: { prompt: string; sample: string }
-    review: { speak: string; capabilityLine: string }
+    /** 收尾提醒：疑问语气 + 再判断一次（主动回忆） */
+    review: {
+      speak: string
+      capabilityLine: string
+      /** 再认/再选；有则须答对才能收认真星 */
+      recall?: {
+        show?: string
+        prompt: string
+        options: string[]
+        answer: number
+      }
+    }
   }
   reward: { earnestStars: number }
 }

@@ -26,8 +26,16 @@ export const LESSONS: LessonContent[] = [
         sample: '我看见一颗星。',
       },
       review: {
-        speak: '真棒。你今天会认星，还练习了观察和表达。',
+        // 已学过并跳到下一环节：用疑问语气再提醒读一次，给孩子主动判断机会
+        speak: '想一想：这个字，读什么？',
         capabilityLine: '今天练了：识字 · 观察 · 表达',
+        recall: {
+          show: '⭐',
+          prompt: '这个字，读什么？',
+          // 选项顺序与玩一玩不同，避免死记位置
+          options: ['月', '星', '日', '水'],
+          answer: 1,
+        },
       },
     },
     reward: { earnestStars: 2 },
@@ -56,8 +64,14 @@ export const LESSONS: LessonContent[] = [
         sample: '不一样的是梨。',
       },
       review: {
-        speak: '眼睛真亮。你练习了观察。',
+        speak: '再想一想：不一样的是哪一个？',
         capabilityLine: '今天练了：观察 · 注意',
+        recall: {
+          show: '👀',
+          prompt: '不一样的是哪一个？',
+          options: ['🍎', '🍐', '🍎', '🍎'],
+          answer: 1,
+        },
       },
     },
     reward: { earnestStars: 2 },

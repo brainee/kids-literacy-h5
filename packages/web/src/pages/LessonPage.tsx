@@ -32,6 +32,8 @@ export function LessonPage() {
   const [recUrl, setRecUrl] = useState<string | null>(null)
   const [recMsg, setRecMsg] = useState('')
   const [speakOk, setSpeakOk] = useState(false)
+  const [reviewOk, setReviewOk] = useState(false)
+  const [reviewPicked, setReviewPicked] = useState<number | null>(null)
 
   const beat = BEATS[beatIdx]
 
@@ -43,6 +45,8 @@ export function LessonPage() {
     setDone(false)
     setHint('')
     setSpeakOk(false)
+    setReviewOk(false)
+    setReviewPicked(null)
     setRecStatus('idle')
     setRecUrl(null)
     setRecMsg('')
@@ -64,6 +68,11 @@ export function LessonPage() {
       setRecUrl(null)
       setRecMsg('先点「开始说」，大声读出来。')
       clearRecording()
+    }
+    if (beat === 'review') {
+      setReviewOk(!lesson.beats.review.recall)
+      setReviewPicked(null)
+      setHint('')
     }
   }, [beat, lesson?.id])
 
@@ -99,6 +108,11 @@ export function LessonPage() {
     if (beat === 'speak' && !speakOk) {
       setRecMsg('要先开始说、录到声音，才能进入下一步哦。')
       speak('要先点开始说，再大声读出来。')
+      return
+    }
+    if (beat === 'review' && lesson.beats.review.recall && !reviewOk) {
+      setHint('先选一选再收星哦')
+      speak('想一想，再选一次。')
       return
     }
     if (beatIdx < BEATS.length - 1) {
@@ -271,9 +285,57 @@ export function LessonPage() {
 
       {beat === 'review' && (
         <div className="card stack kid-card">
-          <TapRead text={lesson.beats.review.capabilityLine} />
+          {lesson.beats.review.recall?.show && (
+            <div className="hero bounce-in">{lesson.beats.review.recall.show}</div>
+          )}
+          <TapRead text={lesson.beats.review.speak} />
+          {lesson.beats.review.recall && (
+            <>
+              <TapRead text={lesson.beats.review.recall.prompt} showHint={false} size="sm" />
+              <div className="grid-2">
+                {lesson.beats.review.recall.options.map((opt, i) => (
+                  <button
+                    key={`review-${opt}-${i}`}
+                    type="button"
+                    className={`btn opt-btn ${
+                      reviewPicked === i
+                        ? i === lesson.beats.review.recall!.answer
+                          ? 'btn-mint'
+                          : 'btn-coral'
+                        : 'btn-ghost'
+                    }`}
+                    onClick={() => {
+                      const recall = lesson.beats.review.recall!
+                      setReviewPicked(i)
+                      speak(opt, { rate: 0.82 })
+                      if (i === recall.answer) {
+                        setReviewOk(true)
+                        setHint('对啦！你还记得。')
+                        sfx('correct')
+                        window.setTimeout(() => speak('对啦，你还记得。'), 350)
+                      } else {
+                        setReviewOk(false)
+                        setHint('再想一想？')
+                        sfx('wrong')
+                        window.setTimeout(() => speak('再想一想？'), 350)
+                      }
+                    }}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+          {hint && <p className="celebrate">{hint}</p>}
+          <TapRead text={lesson.beats.review.capabilityLine} showHint={false} size="sm" />
           {!done ? (
-            <button type="button" className="btn btn-sun" onClick={next}>
+            <button
+              type="button"
+              className="btn btn-sun"
+              disabled={Boolean(lesson.beats.review.recall) && !reviewOk}
+              onClick={next}
+            >
               {alreadyDone ? '练完啦' : `收下 ${lesson.reward.earnestStars} 颗认真星 ⭐`}
             </button>
           ) : (
