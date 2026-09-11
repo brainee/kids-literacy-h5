@@ -1,7 +1,12 @@
 import { Link, Navigate } from 'react-router-dom'
 import { lessonsForAge } from '../content/lessons'
+import { buildTodayCoach } from '../content/todayCoach'
+import { ensureBgmPlaying } from '../lib/bgm'
+import { speak } from '../lib/speak'
 import { useApp } from '../state/AppContext'
 import { Shell } from '../ui/Shell'
+import { TapRead } from '../ui/TapRead'
+import './today.css'
 
 export function TodayPage() {
   const { profile } = useApp()
@@ -9,19 +14,66 @@ export function TodayPage() {
   if (!profile.ageBand) return <Navigate to="/age" replace />
 
   const list = lessonsForAge(profile.ageBand).slice(0, 3)
+  const coach = buildTodayCoach(
+    profile,
+    list.map((l) => l.id),
+  )
+  const whole = coach.lines.join('')
 
   return (
     <Shell title={`今日 · ${profile.name}`}>
-      <div className="card kid-card">
-        <p className="muted">今天一起听一听、玩一玩。认真学习会得到认真星 ⭐</p>
-      </div>
+      <section className="today-coach" aria-label="今日鼓励">
+        <div className="today-coach-top">
+          <div className="today-coach-face" aria-hidden>
+            {coach.face}
+          </div>
+          <div className="today-coach-meta">
+            <span className="today-pill">今日 {coach.doneToday}/{coach.goalToday}</span>
+            <span className="today-pill soft">会认 {coach.knownCount} 字</span>
+            <span className="today-pill soft">已上 {coach.lessonCount} 课</span>
+          </div>
+        </div>
+
+        <div className="today-coach-lines">
+          {coach.lines.map((line, i) => (
+            <TapRead
+              key={`${i}-${line.slice(0, 8)}`}
+              text={line}
+              size="sm"
+              showHint={i === 0}
+              wholeSpeak={false}
+            />
+          ))}
+        </div>
+
+        <div className="today-coach-actions">
+          <button
+            type="button"
+            className="btn btn-sun"
+            onClick={() => {
+              speak(whole, {
+                rate: 0.95,
+                onend: () => {
+                  void ensureBgmPlaying()
+                },
+              })
+            }}
+          >
+            听整段鼓励
+          </button>
+          <Link to="/pet" className="btn btn-mint" style={{ textDecoration: 'none' }}>
+            去看星宝
+          </Link>
+        </div>
+      </section>
+
       {list.map((l) => {
         const done = profile.completedLessons.includes(l.id)
         return (
           <Link
             key={l.id}
             to={`/lesson/${l.id}`}
-            className="card kid-card"
+            className="card kid-card today-lesson"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
@@ -34,9 +86,7 @@ export function TodayPage() {
           </Link>
         )
       })}
-      <p className="muted" style={{ textAlign: 'center' }}>
-        差不多了就可以休息，你真棒。
-      </p>
+      <p className="muted today-footer">差不多了就可以休息，你真棒。</p>
     </Shell>
   )
 }

@@ -24,6 +24,7 @@
 | [2.0 能力乐园](./product/specs/2026-09-09-capability-lab-2.0-design.md) | 能力体系×三视角×模块化×技术演进 | approved |
 | [2.0-B 声音与儿童化](./product/specs/2026-09-11-audio-piper-kids-ui-design.md) | BGM/重播/Piper 可选/UI | done |
 | [多宠物](./product/specs/2026-09-11-multi-pet-design.md) | 自选种类/多只/递增认养费 | done |
+| [今日情绪导读](./product/specs/2026-09-11-today-coach-design.md) | 进度/今日预期/星宝 + 点读 | done |
 
 ## Research（调研主题）
 

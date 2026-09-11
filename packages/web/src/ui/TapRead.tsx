@@ -17,15 +17,37 @@ type Props = {
   className?: string
   /** 整句再听一遍（可选外层按钮旁注） */
   showHint?: boolean
+  /** 是否显示「听整句」 */
+  wholeSpeak?: boolean
+  size?: 'md' | 'sm'
 }
 
-export function TapRead({ text, className = '', showHint = true }: Props) {
+export function TapRead({
+  text,
+  className = '',
+  showHint = true,
+  wholeSpeak = false,
+  size = 'md',
+}: Props) {
   const [active, setActive] = useState<number | null>(null)
   const chars = Array.from(text)
 
   return (
-    <div className={`tap-read ${className}`.trim()}>
-      {showHint && <div className="tap-read-hint muted">点字读音</div>}
+    <div className={`tap-read tap-read-${size} ${className}`.trim()}>
+      {(showHint || wholeSpeak) && (
+        <div className="tap-read-toolbar">
+          {showHint && <div className="tap-read-hint muted">点字读音</div>}
+          {wholeSpeak && (
+            <button
+              type="button"
+              className="tap-read-whole btn btn-ghost"
+              onClick={() => speak(text, { rate: 0.92 })}
+            >
+              听整句
+            </button>
+          )}
+        </div>
+      )}
       <p className="tap-read-line" lang="zh-CN">
         {chars.map((ch, i) => {
           if (!isTapUnit(ch)) {

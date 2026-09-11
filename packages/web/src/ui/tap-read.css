@@ -1,7 +1,20 @@
+.tap-read-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
 .tap-read-hint {
   font-size: 0.85rem;
   font-weight: 700;
-  margin-bottom: 6px;
+}
+
+.tap-read-whole {
+  padding: 6px 12px !important;
+  font-size: 0.85rem !important;
+  border-radius: 999px !important;
 }
 
 .tap-read-line {
@@ -13,6 +26,16 @@
   font-size: 1.35rem;
   font-weight: 800;
   line-height: 1.7;
+}
+
+.tap-read-sm .tap-read-line {
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.tap-read-sm .tap-read-unit {
+  padding: 1px 4px;
+  border-radius: 8px;
 }
 
 .tap-read-unit {

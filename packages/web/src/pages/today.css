@@ -1,0 +1,101 @@
+.today-coach {
+  border-radius: 28px;
+  padding: 16px 16px 14px;
+  background:
+    radial-gradient(120% 80% at 10% 0%, rgba(255, 209, 102, 0.45), transparent 55%),
+    radial-gradient(90% 70% at 100% 20%, rgba(111, 223, 181, 0.35), transparent 50%),
+    linear-gradient(165deg, #e8f7ff 0%, #fff6e8 100%);
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 0 rgba(14, 116, 144, 0.08);
+}
+
+.today-coach-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.today-coach-face {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 2.4rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 3px solid rgba(14, 116, 144, 0.1);
+  flex-shrink: 0;
+  animation: today-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes today-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.today-coach-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.today-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  background: #083344;
+  color: #fff8e8;
+}
+
+.today-pill.soft {
+  background: rgba(255, 255, 255, 0.75);
+  color: #083344;
+  border: 2px solid rgba(8, 51, 68, 0.1);
+}
+
+.today-coach-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.today-coach-lines .tap-read {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+  padding: 8px 10px;
+}
+
+.today-coach-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.today-lesson {
+  transition: transform 0.12s ease;
+}
+
+.today-lesson:active {
+  transform: scale(0.98);
+}
+
+.today-footer {
+  text-align: center;
+  margin-top: 4px;
+}
+
+@media (max-width: 380px) {
+  .today-coach-actions {
+    grid-template-columns: 1fr;
+  }
+}
