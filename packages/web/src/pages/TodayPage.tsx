@@ -12,8 +12,8 @@ export function TodayPage() {
 
   return (
     <Shell title={`今日 · ${profile.name}`}>
-      <div className="card">
-        <p className="muted">建议完成 2–3 个短课就休息。认真学习会得到认真星 ⭐</p>
+      <div className="card kid-card">
+        <p className="muted">今天一起听一听、玩一玩。认真学习会得到认真星 ⭐</p>
       </div>
       {list.map((l) => {
         const done = profile.completedLessons.includes(l.id)
@@ -21,20 +21,22 @@ export function TodayPage() {
           <Link
             key={l.id}
             to={`/lesson/${l.id}`}
-            className="card"
+            className="card kid-card"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
               <div>
-                <strong>{l.title}</strong>
+                <strong style={{ fontSize: '1.15rem' }}>{l.title}</strong>
                 <div className="muted">{l.summary}</div>
               </div>
-              <span className="chip">{done ? '会了' : `+${l.reward.earnestStars}⭐`}</span>
+              <span className="chip">{done ? '会了 ✓' : `+${l.reward.earnestStars}⭐`}</span>
             </div>
           </Link>
         )
       })}
-      <p className="muted">今日目标差不多了，就可以停下来，很棒。</p>
+      <p className="muted" style={{ textAlign: 'center' }}>
+        差不多了就可以休息，你真棒。
+      </p>
     </Shell>
   )
 }

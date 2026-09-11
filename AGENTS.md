@@ -54,11 +54,12 @@ Owner 意图
 
 ## 4. Agent 行为清单
 
-1. 读 `AGENTS.md` → `TASKS.md` → 相关 spec → `packages/web`  
+1. 读 `AGENTS.md` → **§7 血泪清单** → `docs/dev/playbooks/kids-h5-pitfalls.md` → `TASKS.md` → 相关 spec → `packages/web`  
 2. 本地预览 2.0：`cd packages/web && npm install && npm run dev`  
 3. 本地预览 1.x：`python3 -m http.server` 打开 `/legacy.html`（建议迁完内容后删除双轨）  
 4. 完成前：`cd packages/web && npm run build`（+ `npm test`）+ 冒烟写入 `docs/dev/evidence/`  
 5. 更新 TASKS 状态  
+6. 被 Owner 同一问题追问第二次 → **立刻**把教训写进 §7 / playbook，再修产品  
 
 ## 5. 代码地图（速查）
 
@@ -71,4 +72,17 @@ Owner 意图
 ## 6. 当前基线
 
 - 一期 + 1.1 + 1.2 done；多包已收拢为 `packages/web`  
-- **2.0-A**：Vite 骨架 + 年龄带 + 认真星 + 示例课（见 T-041）
+- **2.0-A**：Vite 骨架 + 年龄带 + 认真星 + 示例课（见 T-041）  
+- **2.0-B+**：BGM/重播/Piper 可选、说一说真录音、星宝商店+多宠（见 T-045～T-048）
+
+## 7. 血泪清单（Owner 纠偏 · 不要再提醒）
+
+详细版：[`docs/dev/playbooks/kids-h5-pitfalls.md`](docs/dev/playbooks/kids-h5-pitfalls.md)
+
+1. **迁功能 = 迁完整玩法**，禁止收成空壳按钮（星宝必须有商店/背包/喂养/庆祝，可用认真星替代金币）。  
+2. **儿童视听是交付标准**：大图案、音效、动效、可回退；不是「以后 polish」。  
+3. **BGM ≠ 下载资源**：Web Audio 本机合成；手势内 unlock + silent kick；TTS/回前台后 `ensureBgmPlaying()`；验收以「切曲后真能听到旋律」为准。  
+4. **说一说**：开始说 → 录音+音量检测 → 回放 → 再下一步；禁止「我说完了」空点。  
+5. **课程可回上一拍**；每拍可「再听一遍」。  
+6. **多宠 / 每孩独立**：最多 3 只、认养递增价、切换与喂养有反馈。  
+7. 修过的 bug **本机复测**再写 evidence；勿无 build 代替玩法验收。

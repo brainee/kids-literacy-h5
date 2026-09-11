@@ -8,6 +8,10 @@
 
 | ID | 标题 | 状态 | 规格 | 计划 | 证据 / 备注 |
 |----|------|------|------|------|-------------|
+| T-048 | 多宠自选：每人多只、递增费用、儿童化视听 | done | [规格](../../product/specs/2026-09-11-multi-pet-design.md) | — | PetPage 认养/切换 |
+| T-047 | 恢复星宝商店/背包/喂养交互（认真星经济） | done | 2.0 规格星宝 | — | PetPage 商店+背包 |
+| T-046 | 修 BGM 必播 + 上一拍 + 说一说录音检测 | done | Owner 复测 | — | [`../evidence/smoke-2026-09-11-bgm-speak-retest.md`](../evidence/smoke-2026-09-11-bgm-speak-retest.md) |
+| T-045 | 2.0-B 声音（BGM/重播/Piper）+ 儿童化 UI | done | [规格](../../product/specs/2026-09-11-audio-piper-kids-ui-design.md) | [计划](./2026-09-11-audio-piper-kids-ui-plan.md) | [`../evidence/smoke-2026-09-11-audio-piper-ui.md`](../evidence/smoke-2026-09-11-audio-piper-ui.md) |
 | T-044 | 课内提示句点读（点一个读一个） | done | Owner 口述 | — | `packages/web/src/ui/TapRead.tsx` |
 | T-043 | review 修复（刷星/不可变 store）；**撤顶层 package.json** | done | Owner 问询 | — | [`../evidence/smoke-2026-09-09-root-review.md`](../evidence/smoke-2026-09-09-root-review.md) |
 | T-042 | 收拢为 packages/web 单项目 + evidence 入 docs | done | Owner 口述 | — | [`../evidence/smoke-2026-09-09-monopackage.md`](../evidence/smoke-2026-09-09-monopackage.md) |

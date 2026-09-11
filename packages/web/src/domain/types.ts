@@ -39,11 +39,16 @@ export interface LessonContent {
   reward: { earnestStars: number }
 }
 
+export type PetKindId = 'chick' | 'bunny' | 'kitty' | 'puppy' | 'panda'
+
 export interface PetState {
+  id: string
+  kind: PetKindId
   name: string
   level: number
   hunger: number
   foods: { carrot: number; apple: number; fish: number }
+  lastFedAt?: number
 }
 
 export interface ProfileV2 {
@@ -55,8 +60,13 @@ export interface ProfileV2 {
   capabilityXp: Partial<Record<CapabilityTag, number>>
   completedLessons: string[]
   knownChars: string[]
-  pet: PetState
+  /** @deprecated 读时迁移到 pets */
+  pet?: PetState
+  pets: PetState[]
+  activePetId: string | null
 }
+
+export type TtsEnginePref = 'webspeech' | 'piper'
 
 export interface StoreV2 {
   version: 2
@@ -64,4 +74,6 @@ export interface StoreV2 {
   currentUserId: string | null
   profiles: Record<string, ProfileV2>
   bgm: string
+  ttsEngine: TtsEnginePref
+  piperAutoPrefetch: boolean
 }

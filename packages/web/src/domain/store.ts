@@ -1,4 +1,5 @@
-import type { AgeBand, CapabilityTag, ProfileV2, StoreV2 } from './types'
+import type { AgeBand, CapabilityTag, PetKindId, PetState, ProfileV2, StoreV2 } from './types'
+import { adoptCost, MAX_PETS, PET_FOODS, type FoodId } from '../content/petFoods'
 
 const KEY = 'kidsThinkLit.v2'
 const LEGACY_KEY = 'kidsThinkLit.v1'
@@ -7,15 +8,19 @@ function uid() {
   return 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
 }
 
-export function defaultPet() {
+export function makePet(kind: PetKindId, name: string): PetState {
   return {
-    name: '星宝',
+    id: 'p_' + uid().slice(2),
+    kind,
+    name: name.trim().slice(0, 6) || '小伙伴',
     level: 1,
-    hunger: 20,
+    hunger: 35,
     foods: { carrot: 1, apple: 0, fish: 0 },
+    lastFedAt: Date.now(),
   }
 }
 
+/** 空栏：还没认养，等小孩自己选 */
 export function defaultProfile(name = '小朋友'): ProfileV2 {
   return {
     version: 2,
@@ -26,21 +31,53 @@ export function defaultProfile(name = '小朋友'): ProfileV2 {
     capabilityXp: {},
     completedLessons: [],
     knownChars: [],
-    pet: defaultPet(),
+    pets: [],
+    activePetId: null,
+  }
+}
+
+function normalizeProfile(raw: ProfileV2): ProfileV2 {
+  let pets = Array.isArray(raw.pets) ? raw.pets.map((p) => ({ ...p, foods: { ...p.foods } })) : []
+  if ((!pets.length || !raw.pets) && raw.pet) {
+    const legacy = raw.pet as PetState & { kind?: PetKindId }
+    pets = [
+      {
+        id: legacy.id || 'p_legacy',
+        kind: legacy.kind || 'chick',
+        name: legacy.name || '星宝',
+        level: legacy.level || 1,
+        hunger: legacy.hunger ?? 20,
+        foods: { ...{ carrot: 1, apple: 0, fish: 0 }, ...legacy.foods },
+        lastFedAt: legacy.lastFedAt,
+      },
+    ]
+  }
+  const activePetId =
+    (raw.activePetId && pets.some((p) => p.id === raw.activePetId) && raw.activePetId) ||
+    pets[0]?.id ||
+    null
+  return {
+    ...raw,
+    pets,
+    activePetId,
+    capabilityXp: { ...raw.capabilityXp },
+    completedLessons: [...(raw.completedLessons || [])],
+    knownChars: [...(raw.knownChars || [])],
   }
 }
 
 function cloneProfile(p: ProfileV2): ProfileV2 {
+  const n = normalizeProfile(p)
   return {
-    ...p,
-    capabilityXp: { ...p.capabilityXp },
-    completedLessons: [...p.completedLessons],
-    knownChars: [...p.knownChars],
-    pet: {
-      ...p.pet,
-      foods: { ...p.pet.foods },
-    },
+    ...n,
+    pets: n.pets.map((pet) => ({ ...pet, foods: { ...pet.foods } })),
   }
+}
+
+export function getActivePet(profile: ProfileV2): PetState | null {
+  const n = normalizeProfile(profile)
+  if (!n.activePetId) return null
+  return n.pets.find((p) => p.id === n.activePetId) || n.pets[0] || null
 }
 
 function withProfile(store: StoreV2, nextProfile: ProfileV2): StoreV2 {
@@ -50,7 +87,7 @@ function withProfile(store: StoreV2, nextProfile: ProfileV2): StoreV2 {
     ...store,
     profiles: {
       ...store.profiles,
-      [id]: nextProfile,
+      [id]: normalizeProfile(nextProfile),
     },
   }
   saveStore(next)
@@ -69,7 +106,7 @@ function migrateFromV1(): StoreV2 | null {
         {
           thinkStars?: number
           coins?: number
-          pet?: ProfileV2['pet']
+          pet?: Partial<PetState>
           charLevels?: Record<string, number>
         }
       >
@@ -82,14 +119,24 @@ function migrateFromV1(): StoreV2 | null {
       const knownChars = p?.charLevels
         ? Object.keys(p.charLevels).filter((k) => (p.charLevels?.[k] || 0) >= 1)
         : []
+      const base = defaultProfile(u.name)
+      if (p?.pet) {
+        const pet = makePet('chick', p.pet.name || '星宝')
+        pet.level = p.pet.level || 1
+        pet.hunger = p.pet.hunger ?? 20
+        pet.foods = {
+          carrot: p.pet.foods?.carrot ?? 1,
+          apple: p.pet.foods?.apple ?? 0,
+          fish: p.pet.foods?.fish ?? 0,
+        }
+        base.pets = [pet]
+        base.activePetId = pet.id
+      }
       profiles[u.id] = {
-        ...defaultProfile(u.name),
+        ...base,
         earnestStars: Math.max(0, Math.floor((p?.coins || 0) / 2) + (p?.thinkStars || 0)),
         coinsLegacy: p?.coins || 0,
         knownChars,
-        pet: p?.pet
-          ? { ...defaultPet(), ...p.pet, foods: { ...defaultPet().foods, ...p.pet.foods } }
-          : defaultPet(),
       }
     }
     return {
@@ -98,9 +145,25 @@ function migrateFromV1(): StoreV2 | null {
       currentUserId: old.currentUserId ?? null,
       profiles,
       bgm: old.bgm || 'none',
+      ttsEngine: 'webspeech',
+      piperAutoPrefetch: true,
     }
   } catch {
     return null
+  }
+}
+
+function normalizeStore(parsed: StoreV2): StoreV2 {
+  const profiles: StoreV2['profiles'] = {}
+  for (const [id, p] of Object.entries(parsed.profiles || {})) {
+    profiles[id] = normalizeProfile(p)
+  }
+  return {
+    ...parsed,
+    profiles,
+    bgm: parsed.bgm || 'none',
+    ttsEngine: parsed.ttsEngine === 'piper' ? 'piper' : 'webspeech',
+    piperAutoPrefetch: parsed.piperAutoPrefetch !== false,
   }
 }
 
@@ -109,7 +172,11 @@ export function loadStore(): StoreV2 {
     const raw = localStorage.getItem(KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as StoreV2
-      if (parsed?.version === 2 && parsed.users) return parsed
+      if (parsed?.version === 2 && parsed.users) {
+        const next = normalizeStore(parsed)
+        saveStore(next)
+        return next
+      }
     }
   } catch {
     /* fallthrough */
@@ -133,6 +200,8 @@ export function loadStore(): StoreV2 {
       [b]: defaultProfile('月月'),
     },
     bgm: 'none',
+    ttsEngine: 'webspeech',
+    piperAutoPrefetch: true,
   }
   saveStore(store)
   return store
@@ -142,11 +211,11 @@ export function saveStore(store: StoreV2) {
   localStorage.setItem(KEY, JSON.stringify(store))
 }
 
-/** 只读；不存在则返回 null（不在 render 路径上写 store） */
 export function getProfile(store: StoreV2): ProfileV2 | null {
   const id = store.currentUserId
   if (!id) return null
-  return store.profiles[id] ?? null
+  const p = store.profiles[id]
+  return p ? normalizeProfile(p) : null
 }
 
 export function completeLesson(
@@ -158,10 +227,8 @@ export function completeLesson(
 ): StoreV2 {
   const prev = getProfile(store)
   if (!prev) return store
-
   const already = prev.completedLessons.includes(lessonId)
   const p = cloneProfile(prev)
-
   if (!already) {
     p.completedLessons.push(lessonId)
     p.earnestStars += earnestStars
@@ -170,7 +237,6 @@ export function completeLesson(
     }
     if (knownChar && !p.knownChars.includes(knownChar)) p.knownChars.push(knownChar)
   }
-
   return withProfile(store, p)
 }
 
@@ -182,29 +248,133 @@ export function setAgeBand(store: StoreV2, band: AgeBand): StoreV2 {
   return withProfile(store, p)
 }
 
-export function feedPet(
+export function adoptPet(
   store: StoreV2,
-  cost = 2,
+  kind: PetKindId,
+  name: string,
 ): { store: StoreV2; ok: boolean; message: string } {
   const prev = getProfile(store)
   if (!prev) return { store, ok: false, message: '请先选择小朋友' }
+  if (prev.pets.length >= MAX_PETS) {
+    return { store, ok: false, message: `最多养 ${MAX_PETS} 只哦。先把它们喂得胖胖的吧。` }
+  }
+  const cost = adoptCost(prev.pets.length)
   if (prev.earnestStars < cost) {
-    return { store, ok: false, message: '认真星不够啦。先完成一课再来喂。' }
+    return {
+      store,
+      ok: false,
+      message: `认养要 ${cost} 颗认真星。再上几课，更努力一点就能迎新伙伴啦。`,
+    }
   }
-  const carrot = prev.pet.foods.carrot || 0
-  if (carrot <= 0) {
-    return { store, ok: false, message: '没有胡萝卜啦。完成课程后再来看看。' }
-  }
-
+  const pet = makePet(kind, name)
   const p = cloneProfile(prev)
   p.earnestStars -= cost
-  p.pet.foods.carrot -= 1
-  p.pet.hunger = Math.min(100, p.pet.hunger + 18)
-  if (p.pet.hunger >= 100) {
-    p.pet.level += 1
-    p.pet.hunger = 35
-    p.pet.foods.carrot += 1
+  p.pets.push(pet)
+  p.activePetId = pet.id
+  return {
+    store: withProfile(store, p),
+    ok: true,
+    message: cost === 0 ? `${pet.name}来家里啦！` : `花了 ${cost}⭐，迎来${pet.name}！要更努力上课哦。`,
   }
-  const next = withProfile(store, p)
-  return { store: next, ok: true, message: '星宝吃得好开心！' }
+}
+
+export function selectPet(
+  store: StoreV2,
+  petId: string,
+): { store: StoreV2; ok: boolean; message: string } {
+  const prev = getProfile(store)
+  if (!prev) return { store, ok: false, message: '请先选择小朋友' }
+  const pet = prev.pets.find((x) => x.id === petId)
+  if (!pet) return { store, ok: false, message: '找不到这只小伙伴。' }
+  const p = cloneProfile(prev)
+  p.activePetId = petId
+  return { store: withProfile(store, p), ok: true, message: `来照顾${pet.name}啦。` }
+}
+
+export function buyPetFood(
+  store: StoreV2,
+  foodId: FoodId,
+): { store: StoreV2; ok: boolean; message: string } {
+  const prev = getProfile(store)
+  const food = PET_FOODS.find((f) => f.id === foodId)
+  const active = prev ? getActivePet(prev) : null
+  if (!prev || !food) return { store, ok: false, message: '找不到这种食物。' }
+  if (!active) return { store, ok: false, message: '先认养一只小动物吧。' }
+  if (prev.earnestStars < food.price) {
+    return { store, ok: false, message: '认真星不够哦。先去上课赚认真星，再来买。' }
+  }
+  const p = cloneProfile(prev)
+  const pet = p.pets.find((x) => x.id === p.activePetId)
+  if (!pet) return { store, ok: false, message: '先认养一只小动物吧。' }
+  p.earnestStars -= food.price
+  pet.foods[foodId] = (pet.foods[foodId] || 0) + 1
+  return { store: withProfile(store, p), ok: true, message: `买到${food.name}啦。可以喂给${pet.name}。` }
+}
+
+export function feedPet(
+  store: StoreV2,
+  foodId: FoodId = 'carrot',
+): { store: StoreV2; ok: boolean; message: string; leveled: boolean } {
+  const prev = getProfile(store)
+  const food = PET_FOODS.find((f) => f.id === foodId)
+  if (!prev || !food) return { store, ok: false, message: '请先选择小朋友', leveled: false }
+  const p = cloneProfile(prev)
+  const pet = p.pets.find((x) => x.id === p.activePetId)
+  if (!pet) return { store, ok: false, message: '先认养一只小动物吧。', leveled: false }
+  if ((pet.foods[foodId] || 0) <= 0) {
+    return { store, ok: false, message: '还没有这个食物。先去买一份吧。', leveled: false }
+  }
+  pet.foods[foodId] -= 1
+  pet.hunger = Math.min(100, pet.hunger + food.hunger)
+  pet.lastFedAt = Date.now()
+  let leveled = false
+  if (pet.hunger >= 100) {
+    pet.level += 1
+    pet.hunger = 35
+    leveled = true
+  }
+  return {
+    store: withProfile(store, p),
+    ok: true,
+    leveled,
+    message: leveled
+      ? `${pet.name}升级啦！现在是${pet.level}级。`
+      : `真香！${pet.name}吃得好开心。`,
+  }
+}
+
+export function convertLegacyCoins(
+  store: StoreV2,
+): { store: StoreV2; ok: boolean; message: string } {
+  const prev = getProfile(store)
+  if (!prev) return { store, ok: false, message: '请先选择小朋友' }
+  if (prev.coinsLegacy <= 0) return { store, ok: false, message: '没有可兑换的旧金币啦。' }
+  const gain = Math.floor(prev.coinsLegacy / 2)
+  if (gain <= 0) {
+    return { store, ok: false, message: '金币还不够兑 1 颗认真星（2 币兑 1 星）。' }
+  }
+  const p = cloneProfile(prev)
+  p.coinsLegacy -= gain * 2
+  p.earnestStars += gain
+  return { store: withProfile(store, p), ok: true, message: `兑好啦！得到 ${gain} 颗认真星。` }
+}
+
+export function addChild(
+  store: StoreV2,
+  name: string,
+): { store: StoreV2; ok: boolean; message: string } {
+  const n = name.trim().slice(0, 8)
+  if (!n) return { store, ok: false, message: '先写上名字，好不好。' }
+  if (store.users.some((u) => u.name === n)) {
+    return { store, ok: false, message: '已经有这个名字啦。' }
+  }
+  const id = uid()
+  const next: StoreV2 = {
+    ...store,
+    users: [...store.users, { id, name: n, createdAt: Date.now() }],
+    profiles: { ...store.profiles, [id]: defaultProfile(n) },
+    currentUserId: id,
+  }
+  saveStore(next)
+  return { store: next, ok: true, message: `好呀，已添加${n}。快去选一只小动物吧。` }
 }

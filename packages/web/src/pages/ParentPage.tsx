@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import type { AgeBand } from '../domain/types'
+import { BGM_STYLES, ensureBgmPlaying } from '../lib/bgm'
+import { ensurePiper, getPiperState, subscribePiper } from '../lib/piper'
 import { speak } from '../lib/speak'
 import { useApp } from '../state/AppContext'
 import { Shell } from '../ui/Shell'
@@ -7,16 +10,30 @@ import { Shell } from '../ui/Shell'
 const BANDS: AgeBand[] = ['L0', 'L1', 'L2']
 
 export function ParentPage() {
-  const { profile, setBand, store, selectUser } = useApp()
+  const {
+    profile,
+    setBand,
+    store,
+    selectUser,
+    setBgm,
+    setTtsEngine,
+    setPiperAutoPrefetch,
+    addUser,
+  } = useApp()
+  const [piper, setPiper] = useState(getPiperState())
+  const [bgmMsg, setBgmMsg] = useState('')
+  const [newName, setNewName] = useState('')
+
+  useEffect(() => subscribePiper(setPiper), [])
+
   if (!profile) return <Navigate to="/" replace />
 
   const tags = Object.entries(profile.capabilityXp)
 
   return (
     <Shell title="家长角">
-      <div className="card stack">
-        <p className="muted">数据只存在本机。可切换小朋友或调整年龄带。</p>
-        <label className="muted">当前小朋友</label>
+      <div className="card stack kid-card">
+        <p className="muted">数据只存在本机。可切换 / 新增小朋友。</p>
         <div className="stack">
           {store.users.map((u) => (
             <button
@@ -25,16 +42,46 @@ export function ParentPage() {
               className={`btn ${store.currentUserId === u.id ? 'btn-sky' : 'btn-ghost'}`}
               onClick={() => {
                 selectUser(u.id)
-                speak(`切换到${u.name}`)
+                speak(`切换到${u.name}`, {
+                  onend: () => {
+                    void ensureBgmPlaying()
+                  },
+                })
               }}
             >
               {u.name}
             </button>
           ))}
         </div>
+        <div className="stack" style={{ gridTemplateColumns: '1fr auto', display: 'grid', gap: 8 }}>
+          <input
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="新名字"
+            maxLength={8}
+            style={{
+              borderRadius: 16,
+              border: '3px solid rgba(31,42,55,0.12)',
+              padding: '12px 14px',
+              fontSize: '1.05rem',
+              fontWeight: 700,
+            }}
+          />
+          <button
+            type="button"
+            className="btn btn-mint"
+            onClick={() => {
+              const r = addUser(newName)
+              speak(r.message)
+              if (r.ok) setNewName('')
+            }}
+          >
+            添加
+          </button>
+        </div>
       </div>
 
-      <div className="card stack">
+      <div className="card stack kid-card">
         <strong>年龄带</strong>
         <div className="grid-2">
           {BANDS.map((b) => (
@@ -53,7 +100,100 @@ export function ParentPage() {
         </div>
       </div>
 
-      <div className="card stack">
+      <div className="card stack kid-card">
+        <strong>背景音乐</strong>
+        <p className="muted">
+          点选后应马上听到旋律（不是下载的歌，是本机合成）。听不到请再点一次，并确认手机没静音。
+        </p>
+        <div className="stack">
+          {BGM_STYLES.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className={`btn ${store.bgm === s.id ? 'btn-sky' : 'btn-ghost'}`}
+              onClick={async () => {
+                const ok = await setBgm(s.id)
+                if (!ok && s.id !== 'none') {
+                  setBgmMsg('音乐没启动。请再点一次这一项。')
+                  speak('音乐还没准备好。再点一次试试。', { duck: false })
+                  return
+                }
+                const line =
+                  s.id === 'none' ? '好，背景音乐关掉啦。' : `好呀，我们换成${s.label}。`
+                setBgmMsg(ok ? `${line}（旋律应在播放）` : line)
+                // 先让 BGM 响一会儿，再轻声提示，结束后确保续播
+                speak(line, {
+                  duck: true,
+                  onend: () => {
+                    void ensureBgmPlaying()
+                  },
+                })
+              }}
+            >
+              {s.emoji} {s.label}
+              {store.bgm === s.id ? ' · 当前' : ''}
+            </button>
+          ))}
+        </div>
+        {bgmMsg && <p className="muted">{bgmMsg}</p>}
+      </div>
+
+      <div className="card stack kid-card">
+        <strong>朗读嗓音</strong>
+        <p className="muted">
+          默认系统朗读。Piper 为可选下载（可缓存）。背景音乐与 Piper 无关，不需要下载。
+        </p>
+        <div className="grid-2">
+          <button
+            type="button"
+            className={`btn ${store.ttsEngine === 'webspeech' ? 'btn-mint' : 'btn-ghost'}`}
+            onClick={() => {
+              setTtsEngine('webspeech')
+              speak('好，用系统朗读。')
+            }}
+          >
+            系统朗读
+          </button>
+          <button
+            type="button"
+            className={`btn ${store.ttsEngine === 'piper' ? 'btn-mint' : 'btn-ghost'}`}
+            onClick={async () => {
+              const ok = await ensurePiper()
+              if (ok) {
+                setTtsEngine('piper')
+                speak('好呀，换成更甜的嗓音。')
+              } else {
+                speak('还没下好，先用系统朗读。')
+              }
+            }}
+          >
+            更甜嗓音 Piper
+          </button>
+        </div>
+        <button
+          type="button"
+          className="btn btn-sun"
+          disabled={piper.status === 'downloading' || piper.status === 'ready'}
+          onClick={() => void ensurePiper()}
+        >
+          {piper.status === 'ready'
+            ? '已缓存到本机 ✓'
+            : piper.status === 'downloading'
+              ? `下载中 ${Math.round(piper.progress * 100)}%`
+              : '手动下载 Piper 模型'}
+        </button>
+        <label className="muted" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <input
+            type="checkbox"
+            checked={store.piperAutoPrefetch}
+            onChange={(e) => setPiperAutoPrefetch(e.target.checked)}
+          />
+          空闲时自动预下载 Piper（不自动切换引擎）
+        </label>
+        {piper.message && <p className="muted">{piper.message}</p>}
+      </div>
+
+      <div className="card stack kid-card">
         <strong>能力小账本</strong>
         {tags.length === 0 ? (
           <p className="muted">完成一课后会出现能力标签。</p>
@@ -67,14 +207,7 @@ export function ParentPage() {
           </ul>
         )}
         <p className="muted">
-          认真星 {profile.earnestStars} · 会认字 {profile.knownChars.join('、') || '还没有'} · 旧金币遗留{' '}
-          {profile.coinsLegacy}
-        </p>
-      </div>
-
-      <div className="card">
-        <p className="muted">
-          旧版 ESM 玩法：仓库根 `legacy.html`（本地静态服务）。线上以本 2.0 壳为准。
+          认真星 {profile.earnestStars} · 会认字 {profile.knownChars.join('、') || '还没有'}
         </p>
       </div>
     </Shell>

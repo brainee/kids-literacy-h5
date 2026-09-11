@@ -1,6 +1,9 @@
 # 交付自测清单
 
-环境：Chrome / Safari；手机宽度模拟；本地 `file://` 或 `serve`。
+> **2.0 主路径**：`cd packages/web && npm run dev`；验收细则见 [`docs/dev/playbooks/kids-h5-pitfalls.md`](docs/dev/playbooks/kids-h5-pitfalls.md)。  
+> 下列条目偏 1.x；新功能以 2.0 规格 + pitfalls 为准，BGM / 星宝 / 说一说 验收标准两边一致。
+
+环境：Chrome / Safari；手机宽度模拟；2.0 用 Vite dev，1.x 用 HTTP 静态服务开 `legacy.html`。
 
 ## 用户
 

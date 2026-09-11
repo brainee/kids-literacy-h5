@@ -9,7 +9,7 @@ export function Shell({ children, title }: { children: ReactNode; title?: string
     <div className="shell">
       <header className="shell-bar">
         <div>
-          <div className="eyebrow">星星思维乐园</div>
+          <div className="eyebrow">⭐ 星星思维乐园</div>
           <h1>{title || (profile ? `你好，${profile.name}` : '选一个小朋友')}</h1>
         </div>
         <div className="chips">

@@ -16,8 +16,12 @@ function resolveBase(command: 'build' | 'serve') {
 export default defineConfig(({ command }) => ({
   base: resolveBase(command),
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['piper-plus'],
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    chunkSizeWarningLimit: 2500,
   },
 }))

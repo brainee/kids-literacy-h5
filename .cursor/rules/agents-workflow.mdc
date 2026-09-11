@@ -1,14 +1,24 @@
 ---
-description: 本仓库 Agent 强制流程（docs 分层、任务看板、测试门禁）
+description: 本仓库 Agent 强制流程（docs 分层、任务看板、测试门禁、血泪清单）
 alwaysApply: true
 ---
 
 # kids-literacy-h5 Agent 规则
 
-- 先读 `AGENTS.md` 与 `docs/dev/sdlc/TASKS.md`，再改代码。
+- 先读 `AGENTS.md`（含 **§7 血泪清单**）与 `docs/dev/sdlc/TASKS.md`，再改代码。
+- 产品纠偏细则：`docs/dev/playbooks/kids-h5-pitfalls.md`（**每次改玩法/音频必读**）。
 - 产品行为 → `docs/product/specs/`；工程/架构 → `docs/dev/`；调研 → `docs/research/`。
 - **主代码**在 `packages/web`（Vite+React+TS）；1.x 遗留在 `packages/web/legacy` + 根 `legacy.html`。
-- `packages/` 预留未来多项目；当前不要再拆多包。
+- `packages/` 预留未来多项目；当前不要再拆多包；根目录不要空壳 workspace `package.json`。
 - 勿擅自引入后端 / 云 TTS / 账号体系。
-- 本地：`cd packages/web && npm run dev`（根目录无 package.json，等有第二项目再加 workspace）。
+- 本地：`cd packages/web && npm run dev`。
 - 完成前写 `docs/dev/evidence/`，更新 TASKS；仅 Owner 要求时 commit/push。
+
+## 禁止再犯（Owner 已多次提醒）
+
+1. 迁移时把 1.x 玩法收成空壳（星宝商店/喂养/庆祝必须保留对等闭环）。
+2. 把儿童化视听当成「以后 polish」——图案/音效/动效是验收项。
+3. 误判「BGM 要下载」；BGM 是本机 Web Audio。切 BGM 后必须真能听到；TTS 结束后要恢复。
+4. 「说一说」只有「我说完了」、没有开始录音与音量检测。
+5. 课程没有「上一拍」、没有「再听一遍」。
+6. 宣称修过却未本机按验收路径复测。
