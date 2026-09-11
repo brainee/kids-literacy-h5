@@ -1,0 +1,32 @@
+packages/web/src/pages/LessonPage.tsx
+  s_01e4adfc46a977::t_cab13bff86a55a 113-117
+  s_01e4adfc46a977::t_917abe2768790b 35-36,48-49,72-75
+  s_01e4adfc46a977::t_17bd55aa8b109d 288-331,333-338
+packages/web/src/content/lessons.ts
+  s_01e4adfc46a977::t_224a1e183e8b85 29-30,32-38,67,69-74
+docs/dev/evidence/smoke-2026-09-11-review-recall.md
+  s_01e4adfc46a977::t_d330bb309cc5c7 1-14
+packages/web/src/domain/types.ts
+  s_01e4adfc46a977::t_beb97565be7e03 37,39-47
+  s_01e4adfc46a977::t_758bf6f9e7cf48 38,48
+AGENTS.md
+  s_01e4adfc46a977::t_bf0b3fa0b8a9c6 86
+docs/dev/playbooks/kids-h5-pitfalls.md
+  s_01e4adfc46a977::t_e11ad01d71efd6 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "8489b7ab0def86128ea2ab7d5f266fb5be5d0a6b",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
