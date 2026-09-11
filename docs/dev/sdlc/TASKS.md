@@ -8,6 +8,7 @@
 
 | ID | 标题 | 状态 | 规格 | 计划 | 证据 / 备注 |
 |----|------|------|------|------|-------------|
+| T-044 | 课内提示句点读（点一个读一个） | done | Owner 口述 | — | `packages/web/src/ui/TapRead.tsx` |
 | T-043 | review 修复（刷星/不可变 store）；**撤顶层 package.json** | done | Owner 问询 | — | [`../evidence/smoke-2026-09-09-root-review.md`](../evidence/smoke-2026-09-09-root-review.md) |
 | T-042 | 收拢为 packages/web 单项目 + evidence 入 docs | done | Owner 口述 | — | [`../evidence/smoke-2026-09-09-monopackage.md`](../evidence/smoke-2026-09-09-monopackage.md) |
 | T-040 | 2.0 能力乐园规格 | approved | [2.0 设计](../../product/specs/2026-09-09-capability-lab-2.0-design.md) | — | Owner OK 已锁 4 项 |

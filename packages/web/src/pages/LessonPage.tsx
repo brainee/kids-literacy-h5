@@ -5,6 +5,7 @@ import type { LessonBeat } from '../domain/types'
 import { speak } from '../lib/speak'
 import { useApp } from '../state/AppContext'
 import { Shell } from '../ui/Shell'
+import { TapRead } from '../ui/TapRead'
 
 const BEATS: LessonBeat[] = ['listen', 'play', 'speak', 'review']
 
@@ -84,8 +85,9 @@ export function LessonPage() {
       {beat === 'listen' && (
         <div className="card stack">
           <div className="hero">{lesson.beats.listen.show}</div>
+          <TapRead text={lesson.beats.listen.speak} />
           <button type="button" className="btn btn-ghost" onClick={() => speak(lesson.beats.listen.speak)}>
-            再听一遍
+            再听整句
           </button>
           <button type="button" className="btn btn-sky" onClick={next}>
             下一拍
@@ -95,9 +97,7 @@ export function LessonPage() {
 
       {beat === 'play' && (
         <div className="card stack">
-          <p>
-            <strong>{lesson.beats.play.prompt}</strong>
-          </p>
+          <TapRead text={lesson.beats.play.prompt} />
           <div className="grid-2">
             {lesson.beats.play.options.map((opt, i) => (
               <button
@@ -106,13 +106,14 @@ export function LessonPage() {
                 className={`btn ${picked === i ? (i === lesson.beats.play.answer ? 'btn-mint' : 'btn-coral') : 'btn-ghost'}`}
                 onClick={() => {
                   setPicked(i)
+                  speak(opt, { rate: 0.82 })
                   if (i === lesson.beats.play.answer) {
                     setPlayOk(true)
                     setHint('对啦！')
-                    speak('对啦，真棒。')
+                    window.setTimeout(() => speak('对啦，真棒。'), 350)
                   } else {
                     setHint('再试一次哦')
-                    speak('再试一次哦')
+                    window.setTimeout(() => speak('再试一次哦'), 350)
                   }
                 }}
               >
@@ -132,16 +133,19 @@ export function LessonPage() {
           <div className="hero" style={{ fontSize: '2.5rem' }}>
             🗣️
           </div>
-          <p>
-            <strong>{lesson.beats.speak.prompt}</strong>
-          </p>
-          <p className="muted">可以说：{lesson.beats.speak.sample}</p>
+          <TapRead text={lesson.beats.speak.prompt} />
+          <div>
+            <p className="muted" style={{ marginBottom: 4 }}>
+              可以说：
+            </p>
+            <TapRead text={lesson.beats.speak.sample} showHint={false} />
+          </div>
           <button
             type="button"
             className="btn btn-ghost"
             onClick={() => speak(lesson.beats.speak.sample)}
           >
-            听示范
+            听整句示范
           </button>
           <button type="button" className="btn btn-mint" onClick={next}>
             我说完了
@@ -151,9 +155,7 @@ export function LessonPage() {
 
       {beat === 'review' && (
         <div className="card stack">
-          <p>
-            <strong>{lesson.beats.review.capabilityLine}</strong>
-          </p>
+          <TapRead text={lesson.beats.review.capabilityLine} />
           {!done ? (
             <button type="button" className="btn btn-sun" onClick={next}>
               {alreadyDone ? '练完啦' : `收下 ${lesson.reward.earnestStars} 颗认真星 ⭐`}
