@@ -1,0 +1,25 @@
+packages/web/src/ui/tap-read.css
+  s_01e4adfc46a977::t_61bcc8e4c2c8ac 1-49
+packages/web/src/pages/LessonPage.tsx
+  s_01e4adfc46a977::t_47ecae4032011c 8,88,90,100,109,113,116,136-142,148,158
+packages/web/src/ui/TapRead.tsx
+  s_01e4adfc46a977::t_53ba10b905ee5f 1-56
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_12987741c6062f 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "33358d1889d254919bf04d03599fe212ec965c96",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
