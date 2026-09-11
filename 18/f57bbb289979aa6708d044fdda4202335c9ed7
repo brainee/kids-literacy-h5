@@ -1,0 +1,122 @@
+packages/web/src/ui/shell.css
+  s_01e4adfc46a977::t_9ed60fd8866827 4,6-25,33,36-37,39,41-43,45,52,55,60,62,69,73,75-84,86,91-98,100,106,108-109,112,114,116,118,120,123,125,128,130,133,135,138,141-148,150-155,157-168,174,181,183-184,186
+docs/dev/playbooks/kids-h5-pitfalls.md
+  s_01e4adfc46a977::t_e678a5c6aa71cd 1-55
+packages/web/src/lib/bgm.ts
+  s_01e4adfc46a977::t_e755579cf232c9 1-2,22,34,39-41,48,51,56-64,66-70,72-79,81-88,95-96,99-100,141-142,144-145,147,149-152,154-164,172-173,175-176,178-179,181,183-185,190,192-193,201-205,210-213,221-255,259-270
+  s_01e4adfc46a977::t_7089b4c41b0b04 3-21,23-33,35-38,42-47,49-50,52-55,65,71,80,89-94,97-98,101-140,143,146,148,153,165-171,174,177,180,182,186-189,191,194-200,206-209,214-220,256-258,271
+packages/web/src/lib/piper.ts
+  s_01e4adfc46a977::t_194f53f3ad10a2 34-36
+  s_01e4adfc46a977::t_499d7db8ded8bc 109-115,117
+  s_01e4adfc46a977::t_6509b723cb812b 23
+  s_01e4adfc46a977::t_0a4f40b2d80725 1-4,11-22,24-33,37-48,50-52,58-108,116,118-119
+  s_01e4adfc46a977::t_d066f42ff462a6 5-10
+  s_01e4adfc46a977::t_1e42a30405ce9f 49,53-55,57
+docs/product/specs/2026-09-11-audio-piper-kids-ui-design.md
+  s_01e4adfc46a977::t_7ae80424d7e906 1-34
+packages/web/src/domain/types.ts
+  s_01e4adfc46a977::t_a23b20e733fb3d 51
+  s_01e4adfc46a977::t_bd3e9747baab17 42-43,45-46,63-66
+  s_01e4adfc46a977::t_a0b3f0c7aea667 69-70,77-78
+packages/web/src/domain/store.ts
+  s_01e4adfc46a977::t_cb9dab0bdbea17 294-299,301,303,306,309,312-320,325,330,334-336,338-340,343-350,352-358
+  s_01e4adfc46a977::t_af3680c9344a6c 361-378
+  s_01e4adfc46a977::t_ac4fea77a571c8 127-131
+  s_01e4adfc46a977::t_fddfffafc5319b 156,161-162,164-169,175-176,178-179,203-204
+  s_01e4adfc46a977::t_4fbe54f5950f20 148-149
+  s_01e4adfc46a977::t_331e19bff5ff3b 1-2,11,13-15,17,19,23,34-49,51-65,70,72-73,77-82,90,109,122-126,132-134,136,157-160,163,177,217-218,251,253-254,258-261,263-267,269-277,279,281-288,290-291,300,302,304,307-308,310-311,321-324,327-329,331-333,337,341-342,351,359,379
+  s_01e4adfc46a977::t_19fe82cd5af9db 50
+packages/web/src/pages/LessonPage.tsx
+  s_01e4adfc46a977::t_85d9050a0198dc 5,30,54-60,114,125,143,145-146,155,162,169,173,182,190,204-207,273,281
+  s_01e4adfc46a977::t_e87870fec1cf18 6-12,31-34,45-49,61-67,70-71,89-97,99-103,130-142,192,211-267
+packages/web/src/index.css
+  s_01e4adfc46a977::t_f24d312f84418d 5,8,12-15,48-71
+packages/web/src/ui/Shell.tsx
+  s_01e4adfc46a977::t_e3e607e4e865c2 12
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_010c4a6d9de5cf 14
+  s_01e4adfc46a977::t_21ebd1574ad07c 12
+  s_01e4adfc46a977::t_f3d00fce1eafd1 11
+  s_01e4adfc46a977::t_6b6ec9aef96931 13
+docs/dev/evidence/smoke-2026-09-11-bgm-speak-retest.md
+  s_01e4adfc46a977::t_3fabfeec605599 1-28
+packages/web/src/lib/record.ts
+  s_01e4adfc46a977::t_b5b966a297481d 1-165
+packages/web/src/content/petFoods.ts
+  s_01e4adfc46a977::t_5d144950f8106d 1-8,83-89
+  s_01e4adfc46a977::t_c42297bcec99fd 9-82
+packages/web/src/pages/PetPage.tsx
+  s_01e4adfc46a977::t_240d736f450a1d 14
+  s_01e4adfc46a977::t_a48caac3330012 3-13,21,25-27,30-37,42-44,48-50,68-78,81-83,86,90,93,97,99-125,127-143,146-189,191-216,221,240,242-296
+  s_01e4adfc46a977::t_1ea1e9216db254 1,18,23-24,29,38,45-47,51-67,79-80,87-89,91-92,94-96,98,126,145,190,217-220,222-239,241
+docs/product/specs/2026-09-11-multi-pet-design.md
+  s_01e4adfc46a977::t_4ccbcb0e52eecd 1-14
+packages/web/vite.config.ts
+  s_01e4adfc46a977::t_fe85483b0c5c57 19-21,25
+packages/web/src/pages/pet.css
+  s_01e4adfc46a977::t_4a6787cda381e2 1-2,25-28,30-45,47-48,50-58,60-61,63-66,68-70,72-76,78-89,91-92,95,97-102,104,106-109,227-228
+  s_01e4adfc46a977::t_3886bce8eab08b 3-24,29,46,49,59,62,67,71,77,90,93-94,96,103,105,110-226
+packages/web/src/pages/TodayPage.tsx
+  s_01e4adfc46a977::t_fb1ec9fcbddc19 15-16,24,27,29,32,37-39
+.cursor/rules/agents-workflow.mdc
+  s_01e4adfc46a977::t_51c0bbd1f11e42 2,8-9,12,14,16-24
+packages/web/src/pages/ParentPage.tsx
+  s_01e4adfc46a977::t_d911231356d3ff 1,5,13-20,22-24,26-28,104,108-115,121,131-140,142-143,145-190,192-193,210
+  s_01e4adfc46a977::t_d8001fdd82e6f3 4,21,25,35-36,45-49,56-81,84,103,105-107,116-120,122-130,141,144,191,196
+packages/web/src/lib/speak.ts
+  s_01e4adfc46a977::t_8b225bb662e951 1,31-40,44-47,53-54,58-59,93
+  s_01e4adfc46a977::t_9be6bdfe6795d3 2-17,43,48-52,55-57,60-64,66-92
+  s_01e4adfc46a977::t_412ca12f323482 65
+docs/dev/sdlc/2026-09-11-audio-piper-kids-ui-plan.md
+  s_01e4adfc46a977::t_1777b922428ffb 5-10
+  s_01e4adfc46a977::t_ebe3e50410c9f4 1-4
+AGENTS.md
+  s_01e4adfc46a977::t_468d8f1d58c02a 57,62
+  s_01e4adfc46a977::t_e000d236cc7d69 75-88
+packages/web/src/pages/WelcomePage.tsx
+  s_01e4adfc46a977::t_a368ca980361b0 3,20-26
+  s_01e4adfc46a977::t_6fa039b02dd07f 33,35-36
+CHECKLIST.md
+  s_01e4adfc46a977::t_1ee92606fe0e24 3-6
+docs/dev/evidence/smoke-2026-09-11-audio-piper-ui.md
+  s_01e4adfc46a977::t_68cf494ada243d 1-45
+packages/web/scripts/lesson-flow-smoke.mjs
+  s_01e4adfc46a977::t_2b0bd9cf1d83e1 1-25
+packages/web/src/state/AppContext.tsx
+  s_01e4adfc46a977::t_3d28cf9aaa68f1 151-152,174,191
+  s_01e4adfc46a977::t_a61a45bc443573 122-123,130
+  s_01e4adfc46a977::t_f0f418e1e1cf5e 13
+  s_01e4adfc46a977::t_b68fec37669857 11,15,17,35-36,39
+  s_01e4adfc46a977::t_66635f43e39675 25
+  s_01e4adfc46a977::t_6411a0f0b853ac 60-69
+  s_01e4adfc46a977::t_71dfb8a42a867d 91-102,115-116
+  s_01e4adfc46a977::t_33bfcab9c8eb5f 43
+  s_01e4adfc46a977::t_12f41a0b797ce8 5,26-27,40-42,52-59,119-121,124-129,131-148,160-165,171-173,175-182,188-190,192-193
+  s_01e4adfc46a977::t_40f3be2e561f1c 10,14,22,37-38,103-114,168-169,185-186
+  s_01e4adfc46a977::t_cb3d33ed35d236 166-167,170,183-184,187
+docs/README.md
+  s_01e4adfc46a977::t_95da446e08797d 25
+  s_01e4adfc46a977::t_107e35985ba4c8 26
+  s_01e4adfc46a977::t_861a9aba4227c7 12
+docs/dev/evidence/smoke-2026-09-11-multi-pet.md
+  s_01e4adfc46a977::t_71093ab44d43f8 1-15
+packages/web/package.json
+  s_01e4adfc46a977::t_0f8ee3d02e697c 11
+  s_01e4adfc46a977::t_a4c67dac911c9e 14-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "18f57bbb289979aa6708d044fdda4202335c9ed7",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
