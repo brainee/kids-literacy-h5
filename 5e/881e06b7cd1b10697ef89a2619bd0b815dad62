@@ -1,0 +1,39 @@
+docs/product/specs/2026-09-11-today-coach-design.md
+  s_01e4adfc46a977::t_8850c635d3e005 1-43
+packages/web/src/content/todayCoach.ts
+  s_01e4adfc46a977::t_014f26c4bc774b 1
+  s_01e4adfc46a977::t_da671bef4cb26a 50
+  s_01e4adfc46a977::t_2b69e285c80a0e 24
+  s_01e4adfc46a977::t_4c413650a37ca8 2-23,25-49,51-65
+packages/web/src/pages/today.css
+  s_01e4adfc46a977::t_e9be356f181a38 1-101
+packages/web/src/ui/TapRead.tsx
+  s_01e4adfc46a977::t_52bbb53b93f4ac 20-22,25-31,36-50
+packages/web/src/ui/tap-read.css
+  s_01e4adfc46a977::t_868269143994e4 1-8,12-17,31-38
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_d71347795cc8cf 12
+  s_01e4adfc46a977::t_3e5f6cae6d0453 11
+packages/web/src/pages/TodayPage.tsx
+  s_01e4adfc46a977::t_e95e606730a4c7 3-5,8-9,17-21,25-69,76,89
+docs/README.md
+  s_01e4adfc46a977::t_d9f0921a3f99a7 27
+docs/dev/evidence/smoke-2026-09-11-today-coach.md
+  s_01e4adfc46a977::t_d062601c1bd194 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "5e881e06b7cd1b10697ef89a2619bd0b815dad62",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
