@@ -1,0 +1,40 @@
+packages/web/src/ui/TapRead.tsx
+  s_01e4adfc46a977::t_46aafb4d100309 39
+packages/web/src/pages/LessonPage.tsx
+  s_01e4adfc46a977::t_c6a22cdd0d1195 129
+  s_01e4adfc46a977::t_f14df59c61ae10 295,298-303
+  s_01e4adfc46a977::t_66016851ffb197 165
+  s_01e4adfc46a977::t_da50aedb34f141 114-115
+  s_01e4adfc46a977::t_66573d4058d81d 212,217
+  s_01e4adfc46a977::t_63378e30369930 174
+  s_01e4adfc46a977::t_d19e757b87d408 69,72-75
+packages/web/src/content/todayCoach.ts
+  s_01e4adfc46a977::t_fffe2579092572 15,28,32-34,36,40,42,44,50,53
+packages/web/src/content/lessons.ts
+  s_01e4adfc46a977::t_e1bcf781a14ae3 3,13,16,26,30,34,52,57,62,66,70
+packages/web/src/pages/TodayPage.tsx
+  s_01e4adfc46a977::t_afb510f16a530e 44
+packages/web/src/domain/types.ts
+  s_01e4adfc46a977::t_989c1658e6c7ca 28-29
+packages/web/src/lib/record.ts
+  s_01e4adfc46a977::t_44da9a7b7f8464 93
+  s_01e4adfc46a977::t_67f91ed18e2f82 134
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_801bbe4cdbe9d4 12-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "ec665a7abfcced6cfa36afdb6e3f316ef6580fdb",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
