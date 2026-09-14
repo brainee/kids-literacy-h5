@@ -1,0 +1,29 @@
+packages/web/src/pages/ParentPage.tsx
+  s_01e4adfc46a977::t_5105977f2797d9 106,116-126,131-141
+docs/dev/playbooks/kids-h5-pitfalls.md
+  s_01e4adfc46a977::t_dc465b57487002 31-33
+packages/web/src/lib/bgm.ts
+  s_01e4adfc46a977::t_ae1672ac4e33ec 1,23-24,37,40-41,53,61-77,116-117,121,141-147,166-167,176-177,179-183,216-271,275-278,280-284,286-287,289,292-294,299,304,315-318,322-324,329,331-334,338,354-355
+AGENTS.md
+  s_01e4adfc46a977::t_6af5a6f839e08f 85-86
+docs/dev/evidence/smoke-2026-09-11-bgm-mute-styles.md
+  s_01e4adfc46a977::t_b30e44439fd3ba 1-22
+.cursor/rules/agents-workflow.mdc
+  s_01e4adfc46a977::t_0ceb1c7f26a52a 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "c1d71edc7b157b3612eaf2efba9a7905b7bc125e",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
