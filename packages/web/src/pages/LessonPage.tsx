@@ -66,8 +66,13 @@ export function LessonPage() {
       setSpeakOk(false)
       setRecStatus('idle')
       setRecUrl(null)
-      setRecMsg('先点「开始说」，大声读出来。')
+      setRecMsg('点「开始说」。')
       clearRecording()
+    }
+    if (beat === 'play') {
+      setPlayOk(false)
+      setPicked(null)
+      setHint('')
     }
     if (beat === 'review') {
       setReviewOk(!lesson.beats.review.recall)
@@ -106,8 +111,8 @@ export function LessonPage() {
 
   const next = () => {
     if (beat === 'speak' && !speakOk) {
-      setRecMsg('要先开始说、录到声音，才能进入下一步哦。')
-      speak('要先点开始说，再大声读出来。')
+      setRecMsg('先点「开始说」。')
+      speak('先点开始说。')
       return
     }
     if (beat === 'review' && lesson.beats.review.recall && !reviewOk) {
@@ -121,8 +126,7 @@ export function LessonPage() {
       return
     }
     if (!done) {
-      const known =
-        lesson.subject === 'chinese' && lesson.beats.listen.show.includes('星') ? '星' : undefined
+      const known = lesson.knownChar
       finishLesson(lesson.id, lesson.capabilityTags, lesson.reward.earnestStars, known)
       setDone(true)
       sfx(alreadyDone ? 'coin' : 'levelup')
@@ -158,7 +162,7 @@ export function LessonPage() {
       {beat === 'listen' && (
         <div className="card stack kid-card">
           <div className="hero bounce-in">{lesson.beats.listen.show}</div>
-          <TapRead text={lesson.beats.listen.speak} />
+          <TapRead text={lesson.beats.listen.speak} wholeSpeak />
           <button type="button" className="btn btn-sky" onClick={next}>
             下一拍
           </button>
@@ -167,7 +171,7 @@ export function LessonPage() {
 
       {beat === 'play' && (
         <div className="card stack kid-card">
-          <TapRead text={lesson.beats.play.prompt} />
+          <TapRead text={lesson.beats.play.prompt} wholeSpeak />
           <div className="grid-2">
             {lesson.beats.play.options.map((opt, i) => (
               <button
@@ -205,12 +209,12 @@ export function LessonPage() {
           <div className="hero" style={{ fontSize: '2.5rem' }}>
             {recStatus === 'recording' ? '🎤' : '🗣️'}
           </div>
-          <TapRead text={lesson.beats.speak.prompt} />
+          <TapRead text={lesson.beats.speak.prompt} wholeSpeak />
           <div>
             <p className="muted" style={{ marginBottom: 4 }}>
               可以说：
             </p>
-            <TapRead text={lesson.beats.speak.sample} showHint={false} />
+            <TapRead text={lesson.beats.speak.sample} showHint={false} wholeSpeak />
           </div>
           <button
             type="button"
@@ -288,10 +292,15 @@ export function LessonPage() {
           {lesson.beats.review.recall?.show && (
             <div className="hero bounce-in">{lesson.beats.review.recall.show}</div>
           )}
-          <TapRead text={lesson.beats.review.speak} />
+          <TapRead text={lesson.beats.review.speak} wholeSpeak />
           {lesson.beats.review.recall && (
             <>
-              <TapRead text={lesson.beats.review.recall.prompt} showHint={false} size="sm" />
+              <TapRead
+                text={lesson.beats.review.recall.prompt}
+                showHint={false}
+                size="sm"
+                wholeSpeak
+              />
               <div className="grid-2">
                 {lesson.beats.review.recall.options.map((opt, i) => (
                   <button

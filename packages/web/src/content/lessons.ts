@@ -1,6 +1,6 @@
 import type { LessonContent } from '../domain/types'
 
-/** 2.0-A 示例课：复用「星」 */
+/** 2.0-A 示例课：复用「星」——提示句保持短，方便点读/整句听 */
 export const LESSONS: LessonContent[] = [
   {
     id: 'cn-star-01',
@@ -10,9 +10,10 @@ export const LESSONS: LessonContent[] = [
     ageBands: ['L0', 'L1', 'L2'],
     capabilityTags: ['symbol.chinese.char', 'observe.diff', 'express.speak'],
     summary: '听读「星」，选一选，说一句',
+    knownChar: '星',
     beats: {
       listen: {
-        speak: '天上有什么会眨眼睛？对啦，是星星。这个字，读。星。',
+        speak: '这个字，读：星。',
         show: '⭐ 星',
       },
       play: {
@@ -22,17 +23,15 @@ export const LESSONS: LessonContent[] = [
         answer: 0,
       },
       speak: {
-        prompt: '看着图，大声说：我看见一颗星。',
+        prompt: '请说：我看见一颗星。',
         sample: '我看见一颗星。',
       },
       review: {
-        // 已学过并跳到下一环节：用疑问语气再提醒读一次，给孩子主动判断机会
-        speak: '想一想：这个字，读什么？',
+        speak: '这个字，读什么？',
         capabilityLine: '今天练了：识字 · 观察 · 表达',
         recall: {
           show: '⭐',
-          prompt: '这个字，读什么？',
-          // 选项顺序与玩一玩不同，避免死记位置
+          prompt: '读什么？',
           options: ['月', '星', '日', '水'],
           answer: 1,
         },
@@ -50,25 +49,25 @@ export const LESSONS: LessonContent[] = [
     summary: '找出不一样的那个',
     beats: {
       listen: {
-        speak: '仔细看，找出不一样的那个。',
+        speak: '找出不一样的。',
         show: '👀 找不同',
       },
       play: {
         kind: 'choose',
-        prompt: '哪一个和其他不同？',
+        prompt: '哪一个不同？',
         options: ['🍎', '🍎', '🍐', '🍎'],
         answer: 2,
       },
       speak: {
-        prompt: '告诉我：不一样的是什么？',
+        prompt: '请说：不一样的是梨。',
         sample: '不一样的是梨。',
       },
       review: {
-        speak: '再想一想：不一样的是哪一个？',
+        speak: '不一样的是哪一个？',
         capabilityLine: '今天练了：观察 · 注意',
         recall: {
           show: '👀',
-          prompt: '不一样的是哪一个？',
+          prompt: '哪一个？',
           options: ['🍎', '🍐', '🍎', '🍎'],
           answer: 1,
         },

@@ -36,7 +36,7 @@ export function TapRead({
     <div className={`tap-read tap-read-${size} ${className}`.trim()}>
       {(showHint || wholeSpeak) && (
         <div className="tap-read-toolbar">
-          {showHint && <div className="tap-read-hint muted">点字读音</div>}
+          {showHint && <div className="tap-read-hint muted">点读</div>}
           {wholeSpeak && (
             <button
               type="button"

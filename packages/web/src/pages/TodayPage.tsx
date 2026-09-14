@@ -41,7 +41,7 @@ export function TodayPage() {
               text={line}
               size="sm"
               showHint={i === 0}
-              wholeSpeak={false}
+              wholeSpeak
             />
           ))}
         </div>

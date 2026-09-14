@@ -90,7 +90,7 @@ export async function startRecording(): Promise<{ ok: boolean; message: string }
     if (ev.data && ev.data.size > 0) chunks.push(ev.data)
   }
   recorder.start(200)
-  return { ok: true, message: '开始啦，大声说出来！' }
+  return { ok: true, message: '开始啦，大声说！' }
 }
 
 function stopRecordingQuick() {
@@ -131,7 +131,7 @@ export function stopRecording(): Promise<RecResult> {
         resolve({
           ok: false,
           peak,
-          message: '好像没录上声音。靠近麦克风，再大声说一次好不好。',
+          message: '没录上。靠近一点，再说一次。',
         })
         return
       }

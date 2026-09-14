@@ -9,7 +9,8 @@
 | ID | 标题 | 状态 | 规格 | 计划 | 证据 / 备注 |
 |----|------|------|------|------|-------------|
 | T-049 | 今日情绪导读：进度/预期/星宝 + 点读 | done | [规格](../../product/specs/2026-09-11-today-coach-design.md) | — | [`../evidence/smoke-2026-09-11-today-coach.md`](../evidence/smoke-2026-09-11-today-coach.md) |
-| T-050 | 上课日历 + 家长阶段统计 | todo | （待规格） | — | Owner 已提需求 |
+| T-051 | Review 跟进：点读整句恢复 + 短提示 | done | [review](../evidence/review-2026-09-14.md) | — | 听整句打开；文案缩短 |
+| T-050 | 上课日历 + 家长阶段统计 | todo | （待规格） | — | Owner 已提需求；含真·今日进度 |
 | T-048 | 多宠自选：每人多只、递增费用、儿童化视听 | done | [规格](../../product/specs/2026-09-11-multi-pet-design.md) | — | PetPage 认养/切换 |
 | T-047 | 恢复星宝商店/背包/喂养交互（认真星经济） | done | 2.0 规格星宝 | — | PetPage 商店+背包 |
 | T-046 | 修 BGM 必播 + 上一拍 + 说一说录音检测 | done | Owner 复测 | — | [`../evidence/smoke-2026-09-11-bgm-speak-retest.md`](../evidence/smoke-2026-09-11-bgm-speak-retest.md) |

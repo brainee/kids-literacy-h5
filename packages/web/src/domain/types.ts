@@ -25,6 +25,8 @@ export interface LessonContent {
   ageBands: AgeBand[]
   capabilityTags: CapabilityTag[]
   summary: string
+  /** 学会的字（语文课）；完成后写入 knownChars */
+  knownChar?: string
   beats: {
     listen: { speak: string; show: string }
     play: {
