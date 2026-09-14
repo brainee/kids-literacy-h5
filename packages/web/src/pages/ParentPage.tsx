@@ -103,7 +103,7 @@ export function ParentPage() {
       <div className="card stack kid-card">
         <strong>背景音乐</strong>
         <p className="muted">
-          点选后应马上听到旋律（不是下载的歌，是本机合成）。听不到请再点一次，并确认手机没静音。
+          点选后应马上听到<strong>不同</strong>旋律（本机合成，不是下载的歌）。关掉后旋律应立刻停。听不到请再点一次，并确认手机没静音。
         </p>
         <div className="stack">
           {BGM_STYLES.map((s) => (
@@ -113,21 +113,32 @@ export function ParentPage() {
               className={`btn ${store.bgm === s.id ? 'btn-sky' : 'btn-ghost'}`}
               onClick={async () => {
                 const ok = await setBgm(s.id)
-                if (!ok && s.id !== 'none') {
+                if (s.id === 'none') {
+                  setBgmMsg(ok ? '已关闭背景音乐（旋律应已停下）。' : '关闭失败，请再点一次。')
+                  speak('好，背景音乐关掉啦。', {
+                    duck: false,
+                    onend: () => {
+                      void ensureBgmPlaying()
+                    },
+                  })
+                  return
+                }
+                if (!ok) {
                   setBgmMsg('音乐没启动。请再点一次这一项。')
                   speak('音乐还没准备好。再点一次试试。', { duck: false })
                   return
                 }
-                const line =
-                  s.id === 'none' ? '好，背景音乐关掉啦。' : `好呀，我们换成${s.label}。`
-                setBgmMsg(ok ? `${line}（旋律应在播放）` : line)
-                // 先让 BGM 响一会儿，再轻声提示，结束后确保续播
-                speak(line, {
-                  duck: true,
-                  onend: () => {
-                    void ensureBgmPlaying()
-                  },
-                })
+                const line = `好呀，我们换成${s.label}。`
+                setBgmMsg(`${line}（应听到与刚才不同的旋律）`)
+                // 先让新曲风响约 1 秒，再轻声提示，避免旁白盖住差异
+                window.setTimeout(() => {
+                  speak(line, {
+                    duck: true,
+                    onend: () => {
+                      void ensureBgmPlaying()
+                    },
+                  })
+                }, 900)
               }}
             >
               {s.emoji} {s.label}

@@ -1,4 +1,4 @@
-/** 程序化 BGM（无需下载）。重点：用户手势内解锁 + 静音缓冲 kick + 切歌后必续播 */
+/** 程序化 BGM（无需下载）。关必须真静音；切曲必须听得出差别。 */
 
 export const BGM_STYLES = [
   { id: 'none', label: '关闭音乐', emoji: '🔇' },
@@ -20,6 +20,8 @@ type AudioBag = {
   style: string
   ducked: boolean
   wantedStyle: string
+  /** 切曲/关闭时递增，作废旧 interval 回调 */
+  gen: number
 }
 
 const audio: AudioBag = {
@@ -32,7 +34,10 @@ const audio: AudioBag = {
   style: 'none',
   ducked: false,
   wantedStyle: 'none',
+  gen: 0,
 }
+
+const BGM_VOL = 0.32
 
 function ensureAudio() {
   if (audio.ctx) return audio.ctx
@@ -45,12 +50,29 @@ function ensureAudio() {
   audio.master.gain.value = 1
   audio.master.connect(audio.ctx.destination)
   audio.bgmGain = audio.ctx.createGain()
-  audio.bgmGain.gain.value = 0.28
+  audio.bgmGain.gain.value = 0
   audio.bgmGain.connect(audio.master)
   audio.sfxGain = audio.ctx.createGain()
   audio.sfxGain.gain.value = 0.5
   audio.sfxGain.connect(audio.master)
   return audio.ctx
+}
+
+function setBgmGain(value: number) {
+  if (!audio.bgmGain || !audio.ctx) return
+  const now = audio.ctx.currentTime
+  try {
+    audio.bgmGain.gain.cancelScheduledValues(now)
+    audio.bgmGain.gain.setValueAtTime(audio.bgmGain.gain.value, now)
+    audio.bgmGain.gain.linearRampToValueAtTime(value, now + 0.08)
+  } catch {
+    audio.bgmGain.gain.value = value
+  }
+}
+
+function liveBgmLevel() {
+  if (audio.wantedStyle === 'none' || audio.style === 'none') return 0
+  return audio.ducked ? 0.08 : BGM_VOL
 }
 
 /** Safari/Chrome：用户手势里播一段近静音缓冲，才能真正解锁 */
@@ -91,19 +113,12 @@ export async function unlockAudio() {
 export function duckBgm(on: boolean) {
   if (!audio.bgmGain || !audio.ctx) return
   audio.ducked = on
-  const now = audio.ctx.currentTime
-  // 压低但不静音，避免「好像没在播」
-  const target = on ? 0.1 : 0.28
-  try {
-    audio.bgmGain.gain.cancelScheduledValues(now)
-    audio.bgmGain.gain.setValueAtTime(audio.bgmGain.gain.value, now)
-    audio.bgmGain.gain.linearRampToValueAtTime(target, now + 0.12)
-  } catch {
-    audio.bgmGain.gain.value = target
-  }
+  // 已关闭时绝不因 TTS 结束把音量拉回来
+  setBgmGain(liveBgmLevel())
 }
 
 function stopBgmNodes() {
+  audio.gen += 1
   if (audio.timer) {
     clearInterval(audio.timer)
     audio.timer = null
@@ -121,6 +136,13 @@ function stopBgmNodes() {
     }
   }
   audio.nodes = []
+}
+
+function silenceBgm() {
+  stopBgmNodes()
+  audio.style = 'none'
+  audio.ducked = false
+  setBgmGain(0)
 }
 
 function playTone(
@@ -141,8 +163,8 @@ function playTone(
   const peak = Math.max(0.02, gainVal)
   g.gain.setValueAtTime(0.001, when)
   try {
-    g.gain.linearRampToValueAtTime(peak, when + 0.03)
-    g.gain.linearRampToValueAtTime(0.001, when + Math.max(0.08, dur))
+    g.gain.linearRampToValueAtTime(peak, when + 0.02)
+    g.gain.exponentialRampToValueAtTime(0.001, when + Math.max(0.06, dur))
   } catch {
     g.gain.value = peak
   }
@@ -151,10 +173,14 @@ function playTone(
   o.start(when)
   o.stop(when + dur + 0.05)
   audio.nodes.push(o)
-  // 防止 nodes 无限增长
-  if (audio.nodes.length > 48) {
-    const old = audio.nodes.splice(0, 16)
+  if (audio.nodes.length > 64) {
+    const old = audio.nodes.splice(0, 24)
     for (const n of old) {
+      try {
+        n.stop()
+      } catch {
+        /* ignore */
+      }
       try {
         n.disconnect()
       } catch {
@@ -187,36 +213,95 @@ export function sfx(kind: 'correct' | 'coin' | 'feed' | 'wrong' | 'levelup') {
   })
 }
 
+type StyleEngine = {
+  stepMs: number
+  tick: (i: number, t0: number) => void
+}
+
+/** 四种曲风：音色 + 节奏 + 音高明显不同，避免「怎么切都一样」 */
+function styleEngine(style: string): StyleEngine | null {
+  if (style === 'box') {
+    // 八音盒：高音正弦、慢、上行琶音
+    const seq = [1046.5, 1318.5, 1568.0, 2093.0, 1568.0, 1318.5, 1174.7, 1046.5]
+    return {
+      stepMs: 480,
+      tick: (i, t0) => {
+        playTone(seq[i % seq.length], 0.55, 'sine', t0, 0.1)
+      },
+    }
+  }
+  if (style === 'kids') {
+    // 童趣：中速跳音 + 五度叠音，像儿歌
+    const seq = [392.0, 440.0, 523.25, 440.0, 349.23, 392.0, 523.25, 587.33]
+    return {
+      stepMs: 220,
+      tick: (i, t0) => {
+        const f = seq[i % seq.length]
+        playTone(f, 0.18, 'triangle', t0, 0.11)
+        playTone(f * 1.5, 0.14, 'sine', t0, 0.05)
+      },
+    }
+  }
+  if (style === 'game') {
+    // 小游戏：方波底鼓感 + 短促主音
+    const bass = [130.81, 130.81, 146.83, 130.81]
+    const lead = [523.25, 0, 659.25, 523.25, 784.0, 0, 659.25, 523.25]
+    return {
+      stepMs: 160,
+      tick: (i, t0) => {
+        playTone(bass[i % bass.length], 0.12, 'square', t0, 0.05)
+        const f = lead[i % lead.length]
+        if (f > 0) playTone(f, 0.1, 'square', t0, 0.06)
+      },
+    }
+  }
+  if (style === 'pop') {
+    // 轻快：锯齿亮音、切分（隔拍加重）
+    const seq = [349.23, 440.0, 523.25, 659.25, 587.33, 523.25, 440.0, 392.0]
+    return {
+      stepMs: 280,
+      tick: (i, t0) => {
+        const accent = i % 2 === 0
+        playTone(seq[i % seq.length], accent ? 0.22 : 0.12, 'sawtooth', t0, accent ? 0.07 : 0.04)
+      },
+    }
+  }
+  return null
+}
+
 function beginPattern(style: string) {
   stopBgmNodes()
   audio.style = style
-  if (!audio.ctx || style === 'none') return false
-
-  const patterns: Record<string, number[]> = {
-    box: [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25],
-    kids: [392, 440, 494, 523, 587, 523, 494, 440],
-    game: [261.63, 329.63, 392, 523.25, 392, 329.63, 293.66, 261.63],
-    pop: [349.23, 392, 440, 523.25, 440, 392],
+  if (!audio.ctx || style === 'none') {
+    setBgmGain(0)
+    return false
   }
-  const seq = patterns[style] || patterns.box
-  const wave: OscillatorType = style === 'game' ? 'square' : style === 'pop' ? 'triangle' : 'sine'
-  const stepMs = style === 'kids' ? 260 : 320
-  const noteDur = style === 'kids' ? 0.24 : 0.3
-  const noteGain = style === 'game' ? 0.08 : 0.11
+
+  const engine = styleEngine(style)
+  if (!engine) {
+    setBgmGain(0)
+    audio.style = 'none'
+    return false
+  }
+
+  const gen = audio.gen
   let i = 0
+  setBgmGain(liveBgmLevel())
 
   const tick = () => {
-    if (!audio.ctx || audio.style === 'none') return
+    if (gen !== audio.gen) return
+    if (!audio.ctx || audio.wantedStyle === 'none' || audio.style === 'none') return
+    if (audio.style !== style) return
     if ((audio.ctx.state as string) !== 'running') {
       void audio.ctx.resume()
       return
     }
-    playTone(seq[i % seq.length], noteDur, wave, audio.ctx.currentTime, noteGain)
+    engine.tick(i, audio.ctx.currentTime)
     i += 1
   }
 
   tick()
-  audio.timer = setInterval(tick, stepMs)
+  audio.timer = setInterval(tick, engine.stepMs)
   return true
 }
 
@@ -226,31 +311,33 @@ export async function startBgm(style: string) {
   const ctx = ensureAudio()
   if (!ctx) return false
 
-  const running = await unlockAudio()
-  if (!running) return false
-
   if (audio.wantedStyle === 'none') {
-    stopBgmNodes()
-    audio.style = 'none'
+    // 关：先停节点再硬静音；不依赖 TTS 时机
+    silenceBgm()
+    await unlockAudio()
+    silenceBgm()
     return true
   }
 
-  // 切换时恢复音量（避免卡在 duck）
-  if (audio.bgmGain) audio.bgmGain.gain.value = 0.28
+  const running = await unlockAudio()
+  if (!running) return false
+
   audio.ducked = false
   return beginPattern(audio.wantedStyle)
 }
 
-/** TTS 结束后 / 回前台：若用户选了 BGM 却没在响，强制续播 */
+/** TTS 结束后 / 回前台：若用户选了 BGM 却没在响，强制续播；关闭则保持静音 */
 export async function ensureBgmPlaying() {
-  if (audio.wantedStyle === 'none') return false
+  if (audio.wantedStyle === 'none') {
+    silenceBgm()
+    return false
+  }
   const ok = await unlockAudio()
   if (!ok) return false
   if (audio.style === audio.wantedStyle && audio.timer) {
-    if (audio.bgmGain && !audio.ducked) audio.bgmGain.gain.value = 0.28
+    setBgmGain(liveBgmLevel())
     return true
   }
-  if (audio.bgmGain) audio.bgmGain.gain.value = 0.28
   audio.ducked = false
   return beginPattern(audio.wantedStyle)
 }
@@ -264,6 +351,8 @@ export function installBgmLifecycle() {
     if (document.visibilityState !== 'visible') return
     if (audio.wantedStyle && audio.wantedStyle !== 'none') {
       void ensureBgmPlaying()
+    } else {
+      silenceBgm()
     }
   }
   document.addEventListener('visibilitychange', onVis)

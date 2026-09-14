@@ -28,7 +28,9 @@
 - BGM 是 **Web Audio 本机合成**，**不是下载资源**。别再问「是不是没下到本地」。
 - 系统朗读（speechSynthesis）能响 ≠ AudioContext 已解锁。必须在用户手势内：`resume` + **静音 buffer kick**。
 - 切 BGM 后立刻 TTS 会 duck；**TTS onend / 回前台 / 首次 pointerdown 必须 `ensureBgmPlaying()`**。
-- 验收：家长角点曲目 → **应立刻听到循环旋律**（手机勿静音）。只听旁白不算过。
+- **关闭音乐**：`wantedStyle=none` 时必须 `stop` 全部节点 + `bgmGain=0`；`duckBgm(false)` / TTS 结束不得把音量拉回。
+- **切曲可辨**：八音盒慢高音正弦 / 童趣跳音叠五度 / 小游戏方波 / 轻快锯齿切分——验收时要听得出差异。
+- 验收：家长角点曲目 → **应立刻听到循环旋律**（手机勿静音）。只听旁白不算过。关掉后旋律应停。
 - Piper 可选、默认可 Web Speech；模型可 IndexedDB 缓存。Piper 失败必须静默回退，不挡课。
 
 ## 4. 课程 4 拍
