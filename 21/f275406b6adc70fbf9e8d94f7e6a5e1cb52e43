@@ -1,0 +1,27 @@
+packages/web/src/lib/piper.ts
+  s_01e4adfc46a977::t_098a94335e90fa 54,56-57
+packages/web/vite.config.ts
+  s_01e4adfc46a977::t_07bebadd012913 1,16-29,32,34
+packages/web/scripts/strip-ort-wasm.mjs
+  s_01e4adfc46a977::t_84e501c7d0a4f8 1-25
+docs/dev/deploy-cloudflare-pages.md
+  s_01e4adfc46a977::t_cb0245a2d70763 12,14-20,22-23,25,27-29
+packages/web/package.json
+  s_01e4adfc46a977::t_a0a0fe591d40d2 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.45-trip",
+  "base_commit_sha": "21f275406b6adc70fbf9e8d94f7e6a5e1cb52e43",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
