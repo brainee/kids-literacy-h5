@@ -1,0 +1,76 @@
+packages/web/src/pages/TodayPage.tsx
+  s_01e4adfc46a977::t_e70fe7acfe0a41 4,72-73,86-88
+packages/web/src/domain/progress.ts
+  s_01e4adfc46a977::t_ff942bc9c03786 1-175
+docs/dev/sdlc/TASKS.md
+  s_01e4adfc46a977::t_ec19ec9f700f98 13
+  s_01e4adfc46a977::t_bdd02c0dc799ee 12
+packages/web/src/pages/parent.css
+  s_01e4adfc46a977::t_c183194fed951e 1-112
+packages/web/src/state/AppContext.tsx
+  s_01e4adfc46a977::t_6b8d0c63e9929f 10
+  s_01e4adfc46a977::t_681162b247ddab 91-92
+  s_01e4adfc46a977::t_3112be0e41ca7e 34-40
+docs/dev/evidence/smoke-2026-09-15-calendar-stats.md
+  s_01e4adfc46a977::t_6e87f1075210cd 1-19
+docs/dev/playbooks/kids-h5-pitfalls.md
+  s_01e4adfc46a977::t_109c95dab00193 48
+packages/web/src/domain/store.ts
+  s_01e4adfc46a977::t_ff654552568e00 366
+  s_01e4adfc46a977::t_12fb7a3c710b3e 1-10
+  s_01e4adfc46a977::t_1fb6076e775376 241,255-263
+  s_01e4adfc46a977::t_019d08a2d4d21b 43
+  s_01e4adfc46a977::t_7d13ac6eef9759 76-78,87
+  s_01e4adfc46a977::t_53cf529e8d5167 357-358
+  s_01e4adfc46a977::t_6fd0edeb9fd414 11
+packages/web/package.json
+  s_01e4adfc46a977::t_d8a43fb286f67e 11
+packages/web/src/pages/PetPage.tsx
+  s_01e4adfc46a977::t_a2662ccd496998 89-93,100,131-135,161,164-177,188-189
+  s_01e4adfc46a977::t_7ace3b5acfcf04 5,9,11-14
+packages/web/scripts/pet-stage-smoke.mjs
+  s_01e4adfc46a977::t_4ab1e14610f369 1-24
+docs/README.md
+  s_01e4adfc46a977::t_73b806633e7478 29
+  s_01e4adfc46a977::t_81fa3b9a3ae93d 28
+docs/product/specs/2026-09-15-lesson-calendar-stats-design.md
+  s_01e4adfc46a977::t_46f78fc2840ae6 1-49
+docs/product/specs/2026-09-16-pet-stage-growth-design.md
+  s_01e4adfc46a977::t_1da712c349ef89 1-37
+packages/web/src/pages/LessonPage.tsx
+  s_01e4adfc46a977::t_cbe351b1076535 130
+packages/web/src/domain/types.ts
+  s_01e4adfc46a977::t_49bd1626f06498 67-74,84-85
+packages/web/src/content/petFoods.ts
+  s_01e4adfc46a977::t_da811d3bf1671d 9-12,18-21,29-32,40-43,51-54,62-65,69,83-85,90-121,123-148,156-162
+packages/web/scripts/progress-smoke.mjs
+  s_01e4adfc46a977::t_91c779ddd91e6a 1-50
+AGENTS.md
+  s_01e4adfc46a977::t_cab3cf078afeeb 90-91
+docs/dev/evidence/smoke-2026-09-16-pet-stage.md
+  s_01e4adfc46a977::t_9275c1e0fbbce4 1-23
+packages/web/src/pages/ParentPage.tsx
+  s_01e4adfc46a977::t_2006f285738d89 1,3,5-11,17,20,36-38,42-50,105-211,234,281,340,346-347
+packages/web/src/content/todayCoach.ts
+  s_01e4adfc46a977::t_aeb9b3034da5a7 2,16,22
+  s_01e4adfc46a977::t_2cd505f4dc6295 4
+  s_01e4adfc46a977::t_0f09008c4743f2 50
+packages/web/src/pages/pet.css
+  s_01e4adfc46a977::t_df8d4c7d1a1b04 7-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.44-trip",
+  "base_commit_sha": "34c34540318160cfd918d9816e5966dc7291482c",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
