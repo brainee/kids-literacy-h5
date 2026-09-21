@@ -1,0 +1,21 @@
+packages/web/wrangler.jsonc
+  s_01e4adfc46a977::t_0af2717ae7cab2 3
+docs/dev/deploy-cloudflare-pages.md
+  s_01e4adfc46a977::t_f6796fa9adb68d 1,6-8,16,19-24,27-28,32-33,47,50-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.45-trip",
+  "base_commit_sha": "ad9e6f3fa33768719093b81446ffc9d31e078edc",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
