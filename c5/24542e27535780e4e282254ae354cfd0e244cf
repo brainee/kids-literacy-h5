@@ -1,0 +1,37 @@
+packages/web/public/404.html
+  s_01e4adfc46a977::t_dbf81a5b1a7e02 7,10-13
+packages/web/vite.config.ts
+  s_01e4adfc46a977::t_12907bc38327e0 6-7
+AGENTS.md
+  s_01e4adfc46a977::t_cbbaf61f666980 14
+packages/web/.npmrc
+  s_01e4adfc46a977::t_bfb7cb89fc665b 1
+packages/web/public/_redirects
+  s_01e4adfc46a977::t_4e042cf69b6666 1-2
+README.md
+  s_01e4adfc46a977::t_17912f15e05dc6 50,52-65
+docs/README.md
+  s_01e4adfc46a977::t_b4c020a6240c77 12
+docs/dev/deploy-cloudflare-pages.md
+  s_01e4adfc46a977::t_52519ba756d30b 87
+  s_01e4adfc46a977::t_8df3e991f37465 1-86,90-96
+  s_01e4adfc46a977::t_672c5093473430 88-89
+packages/web/package.json
+  s_01e4adfc46a977::t_0b28146b0830d2 9-10,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.45-trip",
+  "base_commit_sha": "c524542e27535780e4e282254ae354cfd0e244cf",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
