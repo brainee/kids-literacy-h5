@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build && node scripts/strip-ort-wasm.mjs",
     "build:cf": "tsc -b && VITE_BASE=/ vite build && node scripts/strip-ort-wasm.mjs",
     "build:gh": "tsc -b && VITE_BASE=/kids-literacy-h5/ vite build && node scripts/strip-ort-wasm.mjs",
+    "cf:deploy": "npx wrangler deploy --config wrangler.jsonc --assets=./dist",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:cf": "VITE_BASE=/ vite preview",
