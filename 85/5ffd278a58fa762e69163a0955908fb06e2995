@@ -1,0 +1,27 @@
+.gitignore
+  s_01e4adfc46a977::t_05fa77577e5b46 10-11
+packages/web/wrangler.jsonc
+  s_01e4adfc46a977::t_d348943018c3b4 1-6,9-13
+  s_01e4adfc46a977::t_b64982d1e7a509 7-8
+docs/dev/deploy-cloudflare-pages.md
+  s_01e4adfc46a977::t_ec47f99cd341c2 1,3-6,8,14,17-20,22,24-25,27,33-34,39-42
+  s_01e4adfc46a977::t_735cadd5340358 10-13,15
+packages/web/package.json
+  s_01e4adfc46a977::t_3b883089b63fab 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.45-trip",
+  "base_commit_sha": "855ffd278a58fa762e69163a0955908fb06e2995",
+  "prompts": {},
+  "sessions": {
+    "s_01e4adfc46a977": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05c976cb-6aec-4ace-b72c-3f0c2551e033",
+        "model": "default"
+      },
+      "human_author": "yongzheng <yongzheng@trip.com>"
+    }
+  }
+}
