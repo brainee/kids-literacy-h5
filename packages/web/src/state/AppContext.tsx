@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { AgeBand, CapabilityTag, PetKindId, StoreV2, TtsEnginePref } from '../domain/types'
+import type { AgeBand, CapabilityTag, PetKindId, StoreV2, SubjectId, TtsEnginePref } from '../domain/types'
 import type { FoodId } from '../content/petFoods'
 import {
   addChild,
@@ -31,7 +31,13 @@ type AppCtx = {
   refresh: () => void
   selectUser: (id: string) => void
   setBand: (band: AgeBand) => void
-  finishLesson: (id: string, tags: CapabilityTag[], stars: number, char?: string) => void
+  finishLesson: (
+    id: string,
+    tags: CapabilityTag[],
+    stars: number,
+    char?: string,
+    subject?: SubjectId,
+  ) => void
   buyFood: (foodId: FoodId) => { ok: boolean; message: string }
   feedFood: (foodId: FoodId) => { ok: boolean; message: string; leveled: boolean }
   adopt: (kind: PetKindId, name: string) => { ok: boolean; message: string }
@@ -82,8 +88,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const finishLesson = useCallback(
-    (id: string, tags: CapabilityTag[], stars: number, char?: string) => {
-      setStore((s) => completeLesson(s, id, tags, stars, char))
+    (id: string, tags: CapabilityTag[], stars: number, char?: string, subject?: SubjectId) => {
+      setStore((s) => completeLesson(s, id, tags, stars, char, subject))
     },
     [],
   )

@@ -1,6 +1,7 @@
 import { getActivePet } from '../domain/store'
+import { countTodayProgress } from '../domain/progress'
 import type { ProfileV2 } from '../domain/types'
-import { petFace, petMood } from './petFoods'
+import { petMood, petStageFace } from './petFoods'
 
 export type TodayCoach = {
   lines: string[]
@@ -12,13 +13,13 @@ export type TodayCoach = {
   lessonCount: number
 }
 
-/** 今日情绪导读（短句，方便点读） */
+/** 今日情绪导读（短句；进度按日历日） */
 export function buildTodayCoach(
   profile: ProfileV2,
   todayLessonIds: string[],
 ): TodayCoach {
   const goalToday = Math.max(1, todayLessonIds.length)
-  const doneToday = todayLessonIds.filter((id) => profile.completedLessons.includes(id)).length
+  const doneToday = countTodayProgress(profile.lessonLog || [], todayLessonIds)
   const knownCount = profile.knownChars.length
   const lessonCount = profile.completedLessons.length
   const pet = getActivePet(profile)
@@ -46,7 +47,7 @@ export function buildTodayCoach(
 
   let face = '⭐'
   if (pet) {
-    face = petFace(pet.kind, pet.hunger)
+    face = petStageFace(pet.kind, pet.level)
     lines.push(`${pet.name}，${petMood(pet.hunger)}`)
   } else {
     face = '🥚'

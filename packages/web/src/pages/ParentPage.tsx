@@ -1,13 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { getLesson } from '../content/lessons'
 import type { AgeBand } from '../domain/types'
+import {
+  buildMonthGrid,
+  CAPABILITY_LABEL,
+  logsOnDay,
+  SUBJECT_LABEL,
+  summarizeProfile,
+} from '../domain/progress'
 import { BGM_STYLES, ensureBgmPlaying } from '../lib/bgm'
 import { ensurePiper, getPiperState, subscribePiper } from '../lib/piper'
 import { speak } from '../lib/speak'
 import { useApp } from '../state/AppContext'
 import { Shell } from '../ui/Shell'
+import './parent.css'
 
 const BANDS: AgeBand[] = ['L0', 'L1', 'L2']
+const WEEK = ['日', '一', '二', '三', '四', '五', '六']
 
 export function ParentPage() {
   const {
@@ -23,10 +33,21 @@ export function ParentPage() {
   const [piper, setPiper] = useState(getPiperState())
   const [bgmMsg, setBgmMsg] = useState('')
   const [newName, setNewName] = useState('')
+  const now = new Date()
+  const [cursor, setCursor] = useState({ y: now.getFullYear(), m: now.getMonth() })
+  const [selectedDay, setSelectedDay] = useState<string | null>(null)
 
   useEffect(() => subscribePiper(setPiper), [])
 
-  if (!profile) return <Navigate to="/" replace />
+  const log = profile?.lessonLog || []
+  const stats = useMemo(() => (profile ? summarizeProfile(profile) : null), [profile])
+  const cells = useMemo(
+    () => (profile ? buildMonthGrid(cursor.y, cursor.m, log) : []),
+    [profile, cursor.y, cursor.m, log],
+  )
+  const dayLogs = selectedDay ? logsOnDay(log, selectedDay) : []
+
+  if (!profile || !stats) return <Navigate to="/" replace />
 
   const tags = Object.entries(profile.capabilityXp)
 
@@ -82,6 +103,113 @@ export function ParentPage() {
       </div>
 
       <div className="card stack kid-card">
+        <strong>阶段统计 · {profile.name}</strong>
+        <div className="parent-stat-row">
+          <div className="parent-stat">
+            <b>{stats.streak}</b>
+            <span>连续打卡天</span>
+          </div>
+          <div className="parent-stat">
+            <b>{stats.last7}</b>
+            <span>近7天上课</span>
+          </div>
+          <div className="parent-stat">
+            <b>{stats.totalSessions}</b>
+            <span>总练习次</span>
+          </div>
+          <div className="parent-stat">
+            <b>{stats.knownCount}</b>
+            <span>会认字</span>
+          </div>
+        </div>
+        <div className="parent-subject-row">
+          {(Object.keys(SUBJECT_LABEL) as (keyof typeof SUBJECT_LABEL)[]).map((id) => (
+            <span key={id} className="parent-subject-chip">
+              {SUBJECT_LABEL[id]} {stats.bySubject[id]}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="card stack kid-card">
+        <div className="parent-cal-head">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() =>
+              setCursor((c) => {
+                const m = c.m - 1
+                return m < 0 ? { y: c.y - 1, m: 11 } : { y: c.y, m }
+              })
+            }
+          >
+            ←
+          </button>
+          <strong>
+            {cursor.y}年{cursor.m + 1}月
+          </strong>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() =>
+              setCursor((c) => {
+                const m = c.m + 1
+                return m > 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m }
+              })
+            }
+          >
+            →
+          </button>
+        </div>
+        <div className="parent-cal-week">
+          {WEEK.map((w) => (
+            <span key={w}>{w}</span>
+          ))}
+        </div>
+        <div className="parent-cal-grid">
+          {cells.map((c) => (
+            <button
+              key={c.dayKey + String(c.inMonth)}
+              type="button"
+              className={[
+                'parent-cal-cell',
+                c.inMonth ? '' : 'dim',
+                c.count ? 'has' : '',
+                c.isToday ? 'today' : '',
+                selectedDay === c.dayKey ? 'sel' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              onClick={() => setSelectedDay(c.dayKey)}
+            >
+              <span>{c.day}</span>
+              {c.count > 0 && <i>{c.count}</i>}
+            </button>
+          ))}
+        </div>
+        {selectedDay && (
+          <div className="parent-day-detail">
+            <strong>{selectedDay}</strong>
+            {dayLogs.length === 0 ? (
+              <p className="muted">这天还没有上课记录。</p>
+            ) : (
+              <ul>
+                {dayLogs.map((e, i) => {
+                  const lesson = getLesson(e.lessonId)
+                  return (
+                    <li key={`${e.at}-${i}`}>
+                      {SUBJECT_LABEL[e.subject]} · {lesson?.title || e.lessonId}
+                      {e.firstClear ? ' · 首次' : ' · 复习'}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="card stack kid-card">
         <strong>年龄带</strong>
         <div className="grid-2">
           {BANDS.map((b) => (
@@ -103,7 +231,7 @@ export function ParentPage() {
       <div className="card stack kid-card">
         <strong>背景音乐</strong>
         <p className="muted">
-          点选后应马上听到<strong>不同</strong>旋律（本机合成，不是下载的歌）。关掉后旋律应立刻停。听不到请再点一次，并确认手机没静音。
+          点选后应马上听到<strong>不同</strong>旋律（本机合成）。关掉后旋律应立刻停。
         </p>
         <div className="stack">
           {BGM_STYLES.map((s) => (
@@ -130,7 +258,6 @@ export function ParentPage() {
                 }
                 const line = `好呀，我们换成${s.label}。`
                 setBgmMsg(`${line}（应听到与刚才不同的旋律）`)
-                // 先让新曲风响约 1 秒，再轻声提示，避免旁白盖住差异
                 window.setTimeout(() => {
                   speak(line, {
                     duck: true,
@@ -151,9 +278,7 @@ export function ParentPage() {
 
       <div className="card stack kid-card">
         <strong>朗读嗓音</strong>
-        <p className="muted">
-          默认系统朗读。Piper 为可选下载（可缓存）。背景音乐与 Piper 无关，不需要下载。
-        </p>
+        <p className="muted">默认系统朗读。Piper 可选下载。</p>
         <div className="grid-2">
           <button
             type="button"
@@ -212,13 +337,14 @@ export function ParentPage() {
           <ul>
             {tags.map(([k, v]) => (
               <li key={k}>
-                {k} · {v}
+                {CAPABILITY_LABEL[k as keyof typeof CAPABILITY_LABEL] || k} · {v}
               </li>
             ))}
           </ul>
         )}
         <p className="muted">
-          认真星 {profile.earnestStars} · 会认字 {profile.knownChars.join('、') || '还没有'}
+          认真星 {profile.earnestStars} · 会认字 {profile.knownChars.join('、') || '还没有'} · 通关课{' '}
+          {stats.lessonsCleared}
         </p>
       </div>
     </Shell>

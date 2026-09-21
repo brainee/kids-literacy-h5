@@ -64,6 +64,14 @@ export interface PetState {
   lastFedAt?: number
 }
 
+export interface LessonLogEntry {
+  at: number
+  lessonId: string
+  subject: SubjectId
+  /** 是否本课首次通关（认真星只在首次发） */
+  firstClear: boolean
+}
+
 export interface ProfileV2 {
   version: 2
   name: string
@@ -73,6 +81,8 @@ export interface ProfileV2 {
   capabilityXp: Partial<Record<CapabilityTag, number>>
   completedLessons: string[]
   knownChars: string[]
+  /** 上课时间线（含复习），用于日历与真·今日 */
+  lessonLog: LessonLogEntry[]
   /** @deprecated 读时迁移到 pets */
   pet?: PetState
   pets: PetState[]

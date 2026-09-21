@@ -25,6 +25,8 @@
 | [2.0-B 声音与儿童化](./product/specs/2026-09-11-audio-piper-kids-ui-design.md) | BGM/重播/Piper 可选/UI | done |
 | [多宠物](./product/specs/2026-09-11-multi-pet-design.md) | 自选种类/多只/递增认养费 | done |
 | [今日情绪导读](./product/specs/2026-09-11-today-coach-design.md) | 进度/今日预期/星宝 + 点读 | done |
+| [上课日历与统计](./product/specs/2026-09-15-lesson-calendar-stats-design.md) | 真·今日 + 家长月历/阶段统计 | done |
+| [星宝等级形态](./product/specs/2026-09-16-pet-stage-growth-design.md) | 形态看等级 / 心情看饱食 | done |
 
 ## Research（调研主题）
 

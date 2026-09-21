@@ -2,11 +2,16 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import {
   adoptCost,
+  levelsToNextStage,
   MAX_PETS,
   PET_FOODS,
   PET_KINDS,
-  petFace,
+  petDecor,
   petMood,
+  petMoodBadge,
+  petStageFace,
+  petStageIndex,
+  petStageLabel,
   type FoodId,
   type PetKindId,
 } from '../content/petFoods'
@@ -81,13 +86,18 @@ export function PetPage() {
 
   const hunger = active ? Math.max(0, Math.min(100, active.hunger)) : 0
   const kind = PET_KINDS.find((k) => k.id === (active?.kind || pickKind)) || PET_KINDS[0]
+  const stage = active ? petStageIndex(active.level) : 0
+  const stageName = active ? petStageLabel(active.level) : ''
+  const toNext = active ? levelsToNextStage(active.level) : 0
+  const decor = active ? petDecor(active.level) : []
+  const face = active ? petStageFace(active.kind, active.level) : kind.emoji
 
   return (
     <Shell title={active ? `${active.name} · Lv.${active.level}` : '我的小动物'}>
       {celebrate && (
         <div className="pet-celebrate" aria-hidden>
           <span>⭐</span>
-          <span>{kind.emoji}</span>
+          <span>{face}</span>
           <span>🎉</span>
           <span>⭐</span>
           <span>💖</span>
@@ -118,8 +128,11 @@ export function PetPage() {
                     sfx('coin')
                   }}
                 >
-                  <span className="pet-chip-face">{petFace(p.kind, p.hunger)}</span>
-                  <span>{p.name}</span>
+                  <span className="pet-chip-face">{petStageFace(p.kind, p.level)}</span>
+                  <span>
+                    {p.name}
+                    <small className="pet-chip-lv">Lv.{p.level}</small>
+                  </span>
                 </button>
               )
             })}
@@ -145,12 +158,23 @@ export function PetPage() {
 
       {active && (
         <div
-          className="card kid-card stack pet-hero"
+          className={`card kid-card stack pet-hero stage-${stage}`}
           style={{ background: `linear-gradient(180deg, ${kind.color} 0%, #fff 70%)` }}
         >
-          <div className={`hero pet-face ${faceAnim}`}>{petFace(active.kind, hunger)}</div>
-          <div className="pet-sparkle" aria-hidden>
-            ✨
+          <div className="pet-stage-pill">
+            {stageName}形态 · Lv.{active.level}
+            {toNext > 0 ? ` · 再升${toNext}级更闪亮` : ' · 最闪亮啦'}
+          </div>
+          <div className={`pet-stage-ring stage-${stage}`}>
+            <div className={`hero pet-face ${faceAnim}`}>{face}</div>
+            <span className="pet-mood-badge" title="心情">
+              {petMoodBadge(hunger)}
+            </span>
+            {decor.map((d, i) => (
+              <span key={`${d}-${i}`} className={`pet-decor d${i}`} aria-hidden>
+                {d}
+              </span>
+            ))}
           </div>
           <p className="celebrate" style={{ margin: 0 }}>
             {petMood(hunger)}
@@ -160,6 +184,9 @@ export function PetPage() {
           </div>
           <p className="muted" style={{ textAlign: 'center', margin: 0 }}>
             饱食 {Math.round(hunger)}/100 · 认真星 ⭐ {profile.earnestStars}
+          </p>
+          <p className="muted" style={{ textAlign: 'center', margin: 0, fontSize: '0.9rem' }}>
+            多喂会升级变好看；饿了只是心情，不会变回宝宝哦。
           </p>
         </div>
       )}

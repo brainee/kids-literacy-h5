@@ -1,6 +1,7 @@
 import { Link, Navigate } from 'react-router-dom'
 import { lessonsForAge } from '../content/lessons'
 import { buildTodayCoach } from '../content/todayCoach'
+import { isLessonDoneToday } from '../domain/progress'
 import { ensureBgmPlaying } from '../lib/bgm'
 import { speak } from '../lib/speak'
 import { useApp } from '../state/AppContext'
@@ -68,7 +69,8 @@ export function TodayPage() {
       </section>
 
       {list.map((l) => {
-        const done = profile.completedLessons.includes(l.id)
+        const done = isLessonDoneToday(profile.lessonLog || [], l.id)
+        const ever = profile.completedLessons.includes(l.id)
         return (
           <Link
             key={l.id}
@@ -81,7 +83,9 @@ export function TodayPage() {
                 <strong style={{ fontSize: '1.15rem' }}>{l.title}</strong>
                 <div className="muted">{l.summary}</div>
               </div>
-              <span className="chip">{done ? '会了 ✓' : `+${l.reward.earnestStars}⭐`}</span>
+              <span className="chip">
+                {done ? '今天会了 ✓' : ever ? `再练` : `+${l.reward.earnestStars}⭐`}
+              </span>
             </div>
           </Link>
         )

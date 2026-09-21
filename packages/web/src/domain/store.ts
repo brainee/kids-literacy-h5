@@ -1,5 +1,14 @@
-import type { AgeBand, CapabilityTag, PetKindId, PetState, ProfileV2, StoreV2 } from './types'
-import { adoptCost, MAX_PETS, PET_FOODS, type FoodId } from '../content/petFoods'
+import type {
+  AgeBand,
+  CapabilityTag,
+  LessonLogEntry,
+  PetKindId,
+  PetState,
+  ProfileV2,
+  StoreV2,
+  SubjectId,
+} from './types'
+import { adoptCost, HUNGER_AFTER_LEVEL, MAX_PETS, PET_FOODS, type FoodId } from '../content/petFoods'
 
 const KEY = 'kidsThinkLit.v2'
 const LEGACY_KEY = 'kidsThinkLit.v1'
@@ -31,6 +40,7 @@ export function defaultProfile(name = '小朋友'): ProfileV2 {
     capabilityXp: {},
     completedLessons: [],
     knownChars: [],
+    lessonLog: [],
     pets: [],
     activePetId: null,
   }
@@ -63,6 +73,9 @@ function normalizeProfile(raw: ProfileV2): ProfileV2 {
     capabilityXp: { ...raw.capabilityXp },
     completedLessons: [...(raw.completedLessons || [])],
     knownChars: [...(raw.knownChars || [])],
+    lessonLog: Array.isArray(raw.lessonLog)
+      ? raw.lessonLog.map((e) => ({ ...e }))
+      : [],
   }
 }
 
@@ -71,6 +84,7 @@ function cloneProfile(p: ProfileV2): ProfileV2 {
   return {
     ...n,
     pets: n.pets.map((pet) => ({ ...pet, foods: { ...pet.foods } })),
+    lessonLog: n.lessonLog.map((e) => ({ ...e })),
   }
 }
 
@@ -224,6 +238,7 @@ export function completeLesson(
   tags: CapabilityTag[],
   earnestStars: number,
   knownChar?: string,
+  subject: SubjectId = 'chinese',
 ): StoreV2 {
   const prev = getProfile(store)
   if (!prev) return store
@@ -237,6 +252,15 @@ export function completeLesson(
     }
     if (knownChar && !p.knownChars.includes(knownChar)) p.knownChars.push(knownChar)
   }
+  const entry: LessonLogEntry = {
+    at: Date.now(),
+    lessonId,
+    subject,
+    firstClear: !already,
+  }
+  p.lessonLog.push(entry)
+  // 防止无限膨胀：保留最近 400 条
+  if (p.lessonLog.length > 400) p.lessonLog = p.lessonLog.slice(-400)
   return withProfile(store, p)
 }
 
@@ -330,7 +354,8 @@ export function feedPet(
   let leveled = false
   if (pet.hunger >= 100) {
     pet.level += 1
-    pet.hunger = 35
+    // 形态由 level 决定；饱食回到「还行」，勿打回显饿
+    pet.hunger = HUNGER_AFTER_LEVEL
     leveled = true
   }
   return {
@@ -338,7 +363,7 @@ export function feedPet(
     ok: true,
     leveled,
     message: leveled
-      ? `${pet.name}升级啦！现在是${pet.level}级。`
+      ? `${pet.name}升级啦！现在是${pet.level}级，形态更棒了！`
       : `真香！${pet.name}吃得好开心。`,
   }
 }

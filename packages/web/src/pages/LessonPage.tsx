@@ -127,7 +127,7 @@ export function LessonPage() {
     }
     if (!done) {
       const known = lesson.knownChar
-      finishLesson(lesson.id, lesson.capabilityTags, lesson.reward.earnestStars, known)
+      finishLesson(lesson.id, lesson.capabilityTags, lesson.reward.earnestStars, known, lesson.subject)
       setDone(true)
       sfx(alreadyDone ? 'coin' : 'levelup')
       if (alreadyDone) {
