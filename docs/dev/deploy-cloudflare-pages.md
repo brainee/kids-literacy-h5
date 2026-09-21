@@ -9,25 +9,24 @@
 
 > 静态站 + `localStorage`，无后端。CF 与 GH Pages 可同时开，互不影响。
 
-## 方式 A · Dashboard 接 GitHub（推荐）
+## Cloudflare Dashboard 必对配置（`starlit`）
 
-1. 打开 [Cloudflare Dashboard → Workers & Pages](https://dash.cloudflare.com/?to=/:account/workers-and-pages)  
-2. **Create** → **Pages** → **Connect to Git** → 选仓库 `brainee/kids-literacy-h5`（授权 Cloudflare GitHub App）  
-3. Build 配置：
+| 字段 | 正确值 | 错误示例 |
+|------|--------|----------|
+| Root directory | `packages/web` | 仓库根 |
+| Build command | `npm run build:cf` | `npm run build`（会用 GH 子路径） |
+| Build output directory | `dist` | |
+| **Deploy command** | **留空** | `npx wrangler deploy` ← 你日志里的失败原因 |
+| `NODE_VERSION` | `22` 或 `24` | |
 
-| 字段 | 值 |
-|------|-----|
-| Production branch | `main` |
-| Root directory | `packages/web` |
-| Build command | `npm run build:cf` |
-| Build output directory | `dist` |
-| Environment variable | `VITE_BASE` = `/`（`build:cf` 已内置；也可在 UI 再设一遍） |
-| Environment variable | `NODE_VERSION` = `22` |
+> 经典 **Pages** 只上传 `dist`，不要填 Deploy command。  
+> 填了 `wrangler deploy` 会走 **Workers Assets**（单文件 ≤25MiB），且会二次交互式 setup。
 
-4. **Save and Deploy** → 等待构建 → 得到 `https://<项目名>.pages.dev`  
-5. （可选）Custom domains 绑自己的域名；HTTPS 自动签。
+上线地址（项目名 `starlit`）：**https://starlit.pages.dev/**
 
-每次推 `main` 自动生产部署；PR 会出 Preview URL。
+### 大文件说明
+
+`onnxruntime` wasm ≈ 27MB，已从构建产物剔除；Piper 运行时从 jsDelivr CDN 拉 wasm。默认 Web Speech 不受影响。
 
 ### SPA 深链
 

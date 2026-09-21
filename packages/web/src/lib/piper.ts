@@ -51,9 +51,10 @@ export async function ensurePiper(opts?: { force?: boolean }): Promise<boolean> 
         import('onnxruntime-web'),
       ])
       const ort = ortMod
-      // wasm 从 CDN 加载，避免 Vite 打包路径问题
+      // wasm 必须从 CDN 拉：勿打进 dist（CF 单文件上限 25MiB，ort wasm ~27MB）
       if (ort.env?.wasm) {
-        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/'
+        ort.env.wasm.wasmPaths =
+          'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/'
       }
       piperInstance = await PiperPlus.initialize({
         model: MODEL,

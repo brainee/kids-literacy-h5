@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
 /**
@@ -13,11 +13,25 @@ function resolveBase(command: 'build' | 'serve') {
   return command === 'serve' ? '/' : '/kids-literacy-h5/'
 }
 
+/** onnx wasm ~27MB，超 CF 单文件 25MiB；运行时走 CDN（见 piper.ts） */
+function stripOrtWasm(): Plugin {
+  return {
+    name: 'strip-ort-wasm',
+    generateBundle(_opts, bundle) {
+      for (const fileName of Object.keys(bundle)) {
+        if (/\.wasm$/i.test(fileName) && /ort-wasm/i.test(fileName)) {
+          delete bundle[fileName]
+        }
+      }
+    },
+  }
+}
+
 export default defineConfig(({ command }) => ({
   base: resolveBase(command),
-  plugins: [react()],
+  plugins: [react(), stripOrtWasm()],
   optimizeDeps: {
-    exclude: ['piper-plus'],
+    exclude: ['piper-plus', 'onnxruntime-web'],
   },
   build: {
     outDir: 'dist',
