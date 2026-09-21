@@ -47,11 +47,22 @@ python3 -m http.server 5173
 - 首次切到 Actions 部署：仓库 Settings → Pages → Source = **GitHub Actions**
 - 推送 `main` 后约 1–2 分钟更新
 
-### Cloudflare Pages
+### Cloudflare Pages（`*.pages.dev`）
 
-- Root：`packages/web`
-- Build：`npm run build`（自定义域根路径可设 `VITE_BASE=/`）
-- Output：`dist`
+完整步骤见 [`docs/dev/deploy-cloudflare-pages.md`](docs/dev/deploy-cloudflare-pages.md)。
+
+摘要（Dashboard → Connect Git）：
+
+| 项 | 值 |
+|----|-----|
+| Root directory | `packages/web` |
+| Build command | `npm run build:cf` |
+| Output directory | `dist` |
+| `NODE_VERSION` | `22` |
+
+本机预览 CF 产物：`cd packages/web && npm run build:cf && npm run preview:cf`
+
+与 GitHub Pages 可同时开：GH 用子路径 `/kids-literacy-h5/`，CF 用根路径 `/`。
 
 ## 安全说明
 

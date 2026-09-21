@@ -11,7 +11,7 @@
 - **packages/ 约定：** 预留给未来多项目（如 server）；**当前仅 `packages/web` 一个项目**，勿再拆 `@kids/*` 多包
 - **数据**：`localStorage`（`kidsThinkLit.v2`，可读 v1 迁移），不上传
 - **音频**：Web Speech（TTS）+ Web Audio（BGM/音效）；麦克风本地录音不上传
-- **部署**：GitHub Pages（Actions 构建 `packages/web/dist`，base `/kids-literacy-h5/`）
+- **部署**：GitHub Pages（`base=/kids-literacy-h5/`）+ 可选 Cloudflare Pages（`*.pages.dev`，`base=/`，见 `docs/dev/deploy-cloudflare-pages.md`）
 - **仓库路径**：`/Users/zolad/work/app/yirenge/kids-literacy-h5`
 - **MOSS 项目层**：`.moss-twin/` → `~/.agents/projects/kids-literacy-h5/`
 

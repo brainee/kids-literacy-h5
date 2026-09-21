@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 
 /**
  * serve → `/`（本地 http://localhost:5173）
- * build → `/kids-literacy-h5/`（GitHub project Pages）
- * 覆盖：在 shell 里设 VITE_BASE 后构建（CI 已设置）
+ * build 默认 → `/kids-literacy-h5/`（GitHub project Pages）
+ * Cloudflare Pages → `VITE_BASE=/` 或 `npm run build:cf`
  */
 function resolveBase(command: 'build' | 'serve') {
   const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process

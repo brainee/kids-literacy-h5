@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:cf": "tsc -b && VITE_BASE=/ vite build",
+    "build:gh": "tsc -b && VITE_BASE=/kids-literacy-h5/ vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:cf": "VITE_BASE=/ vite preview",
     "test": "node scripts/store-smoke.mjs && node scripts/lesson-flow-smoke.mjs && node scripts/progress-smoke.mjs && node scripts/pet-stage-smoke.mjs"
   },
   "dependencies": {

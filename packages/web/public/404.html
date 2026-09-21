@@ -4,10 +4,13 @@
     <meta charset="utf-8" />
     <title>星星思维乐园</title>
     <script>
-      // Single Page Apps for GitHub Pages (project site, keep 1 segment)
+      // SPA 回落：GitHub project Pages 保留 1 段（/kids-literacy-h5）；Cloudflare *.pages.dev 保留 0 段
       ;(function () {
-        var pathSegmentsToKeep = 1
         var l = window.location
+        var onGhProject =
+          /github\.io$/i.test(l.hostname) ||
+          l.pathname.split('/').filter(Boolean)[0] === 'kids-literacy-h5'
+        var pathSegmentsToKeep = onGhProject ? 1 : 0
         l.replace(
           l.protocol +
             '//' +

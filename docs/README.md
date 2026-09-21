@@ -9,6 +9,7 @@
 | 文档 | 说明 |
 |------|------|
 | [architecture.md](./dev/architecture.md) | `packages/web` 单项目 + legacy |
+| [deploy-cloudflare-pages.md](./dev/deploy-cloudflare-pages.md) | 接入 `*.pages.dev`（与 GH Pages 双轨） |
 | [playbooks/kids-h5-pitfalls.md](./dev/playbooks/kids-h5-pitfalls.md) | **血泪清单**（迁移/BGM/儿童化/课程/星宝） |
 | [sdlc/](./dev/sdlc/) | 阶段总览、实现计划、TASKS 看板 |
 | [evidence/](./dev/evidence/) | 冒烟与验收证据 |
